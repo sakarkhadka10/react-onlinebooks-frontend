@@ -6,7 +6,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 const NavBar = () => {
-  const navItems = ["Home", "Orders", "About"];
+  const navItems = ["Home", "Orders", "About", "Shop"];
   const [navOpen, setNavOpen] = useState(false);
 
   const searchButtonClicked = () => {

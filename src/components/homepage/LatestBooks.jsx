@@ -1,4 +1,5 @@
 import React from "react";
+import ShopPage from "../../pages/shop/ShopPage";
 
 const LatestBooks = () => {
   return (
@@ -11,6 +12,9 @@ const LatestBooks = () => {
           <button className="btn-dark">View All</button>
         </div>
       </header>
+      <main className="mt-6">
+        <ShopPage />
+      </main>
     </>
   );
 };
