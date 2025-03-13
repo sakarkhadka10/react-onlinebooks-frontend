@@ -93,7 +93,11 @@ const NavBar = () => {
             <div className="flex items-center justify-between gap-10">
               <ul className="flex gap-4 text-md font-semibold uppercase">
                 {navItems.map((item, index) => {
-                  return <li key={index}>{item}</li>;
+                  return (
+                    <li key={index} className="cursor-pointer">
+                      {item}
+                    </li>
+                  );
                 })}
               </ul>
               <div className="flex items-center gap-7">
