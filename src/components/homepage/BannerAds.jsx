@@ -1,22 +1,24 @@
-import AnimatedButton from "../ui/Carousel/AnimatedButton";
+import AnimatedButton from "../ui/AnimatedButton";
 
 const BannerAds = () => {
   return (
-    <header className=" h-96 mt-11 bg-[url(https://i.pinimg.com/736x/36/3a/05/363a05ba5c7700b20b29898fd7c5a0f1.jpg)] bg-center bg-no-repeat bg-cover bg-origin-content">
-      <div className="flex flex-col justify-center items-center p-6 pt-24 text-center md:text-start">
-        <h1 className="text-3xl font-extrabold pb-2 uppercase">
-          Want Books In Bundel
-        </h1>
-        <p className="text-xl">
-          Feel free to send us mssage on our socials channel
-        </p>
+    <header className="h-96 mt-11 bg-[url(/bg/bookbg1.webp)] bg-center bg-no-repeat bg-cover bg-origin-content">
+      <div className="flex flex-col justify-center items-center lg:items-end p-6 pt-24 lg:pr-36">
+        <div className="text-center lg:text-right">
+          <h1 className="text-4xl font-extrabold pb-2 uppercase">
+            Want Books In Bundle
+          </h1>
+          <p className="text-xl">
+            Feel free to send us message on our socials channel
+          </p>
+        </div>
       </div>
-      <div className="text-center flex items-center justify-center gap-4 mt-8">
+      <div className="text-center flex items-center justify-center lg:justify-end lg:pr-64 gap-4 mt-8">
         <a href="#">
           <AnimatedButton name="WhatsApp" active={true} />
         </a>
         <a href="#">
-          <AnimatedButton name="WhatsApp" active={true} />
+          <AnimatedButton name="Instagram" active={true} />
         </a>
       </div>
       <br />
