@@ -5,8 +5,14 @@ import {
   FaMagnifyingGlass,
   FaXmark,
 } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 const NavBar = () => {
-  const navItems = ["Home", "Orders", "About", "Shop"];
+  const navItems = [
+    { name: "Home", path: "/" },
+    { name: "Orders", path: "/orders" },
+    { name: "About", path: "/about" },
+    { name: "Shop", path: "/shop" },
+  ];
   const [navOpen, setNavOpen] = useState(false);
 
   const searchButtonClicked = () => {
@@ -67,7 +73,7 @@ const NavBar = () => {
             <nav className="py-7 h-full">
               <ul className="text-2xl uppercase flex flex-col justify-center gap-4 ">
                 {navItems.map((item, index) => {
-                  return <li key={index}>{item}</li>;
+                  return <li key={index}>{item.name}</li>;
                 })}
               </ul>
             </nav>
@@ -94,9 +100,11 @@ const NavBar = () => {
               <ul className="flex gap-4 text-md font-semibold uppercase">
                 {navItems.map((item, index) => {
                   return (
-                    <li key={index} className="cursor-pointer">
-                      {item}
-                    </li>
+                    <Link to={item.path}>
+                      <li key={index} className="cursor-pointer">
+                        {item.name}
+                      </li>
+                    </Link>
                   );
                 })}
               </ul>

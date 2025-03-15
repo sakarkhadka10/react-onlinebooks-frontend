@@ -1,5 +1,5 @@
-import React from "react";
 import AnimatedButton from "../ui/AnimatedButton";
+import { Link } from "react-router-dom";
 
 const MainAds = () => {
   return (
@@ -20,13 +20,15 @@ const MainAds = () => {
             Limited Time Offer
           </span>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
-            10% Off On Selected Books
+            20% Off On Selected Books
           </h1>
           <p className="text-gray-700 mb-6 max-w-md mx-auto">
             Expand your library with our curated selection of bestsellers and
             classics at special prices.
           </p>
-          <AnimatedButton name="Shop Now" active={true} />
+          <Link to="/shop">
+            <AnimatedButton name="Shop Now" active={true} />
+          </Link>
         </div>
 
         {/* Right Person Image */}

@@ -16,14 +16,14 @@ const ShopPage = ({ items }) => {
       {productsToDisplay.map((book) => {
         return (
           <BooksCards
-            key={book.id}
-            id={book.id}
-            image={book.image}
-            title={book.title}
-            author={book.author}
-            price={book.price}
-            rating={book.rating}
-            discount={book.discount}
+            key={book?.id}
+            id={book?.id}
+            image={book?.image}
+            title={book?.title}
+            author={book?.author}
+            price={book?.price}
+            rating={book?.rating}
+            discount={book?.discount}
           />
         );
       })}
