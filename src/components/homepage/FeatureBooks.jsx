@@ -1,15 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ShopPage from "../../pages/shop/ShopPage";
 
 const TrendingBooks = () => {
-  const [book, setBooks] = useState([]);
-  useEffect(() => {
-    fetch("/booksdata.json")
-      .then((res) => res.json())
-      .then((data) => setBooks(data));
-  }, []);
-  const featureProduct = book.filter((book) => book.isfeature === true);
-  const featureProductToDisplay = featureProduct.slice(0, 4);
   return (
     <>
       <header className="flex justify-between items-center mt-5 lg:mt-10 px-4 mb-10">
@@ -21,7 +13,7 @@ const TrendingBooks = () => {
         </div>
       </header>
       <main>
-        <ShopPage items={featureProductToDisplay} />
+        <ShopPage items={{ featured: true, count: 4 }} />
       </main>
     </>
   );

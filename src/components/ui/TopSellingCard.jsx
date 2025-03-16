@@ -1,21 +1,18 @@
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
+import { Link } from "react-router-dom";
 import {
   FaShoppingCart,
   FaStar,
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+import { createSlug } from "../../utils/helpers";
 
-const TopSellingCard = () => {
-  const [books, setBooks] = useState([]);
+const TopSellingCard = ({ books }) => {
   const carouselRef = useRef(null);
 
-  useEffect(() => {
-    fetch("/booksdata.json")
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
-      .catch((error) => console.error("Error fetching books:", error));
-  }, []);
+  // Filter only top selling books
+  const topSellingBooks = books.filter(book => book.topselling === true);
 
   const handleAddToCart = (bookId) => {
     console.log(`Added book ${bookId} to cart`);
@@ -47,6 +44,10 @@ const TopSellingCard = () => {
     }
   };
 
+  if (topSellingBooks.length === 0) {
+    return <div className="text-center py-8">No top selling books available</div>;
+  }
+
   return (
     <div className="relative">
       {/* Navigation Buttons */}
@@ -74,57 +75,61 @@ const TopSellingCard = () => {
           WebkitOverflowScrolling: "touch",
         }}
       >
-        {books.map((book) => (
+        {topSellingBooks.map((book) => (
           <div
             key={book.id}
             className="flex-none w-[280px] bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200"
           >
-            {/* Image Container */}
-            <div className="relative overflow-hidden group h-[200px]">
-              <img
-                src={book.image}
-                alt={book.title}
-                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
-              />
-              {/* Discount Badge */}
-              {book.discount > 0 && (
-                <div className="absolute top-2 right-2">
-                  <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
-                    {book.discount}% OFF
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Content Container */}
-            <div className="p-4 space-y-3">
-              {/* Title and Author */}
-              <div>
-                <h3 className="text-lg font-bold text-gray-800 line-clamp-1">
-                  {book.title}
-                </h3>
-                <p className="text-gray-600 text-sm line-clamp-1">
-                  By {book.author}
-                </p>
+            <Link to={`/shop/${createSlug(book.title)}`}>
+              {/* Image Container */}
+              <div className="relative overflow-hidden group h-[200px]">
+                <img
+                  src={book.image}
+                  alt={book.title}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+                />
+                {/* Discount Badge */}
+                {book.discount > 0 && (
+                  <div className="absolute top-2 right-2">
+                    <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
+                      {book.discount}% OFF
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {/* Price and Rating */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <span className="text-xl font-bold text-blue-600">
-                    {book.price}
-                  </span>
-                  <span className="text-sm text-gray-500 line-through">
-                    $
-                    {(parseFloat(book.price.replace("$", "")) * 1.2).toFixed(2)}
-                  </span>
+              {/* Content Container */}
+              <div className="p-4 space-y-3">
+                {/* Title and Author */}
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800 line-clamp-1">
+                    {book.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm line-clamp-1">
+                    By {book.author}
+                  </p>
                 </div>
-                <div className="flex items-center">
-                  {renderStars(book.rating)}
+
+                {/* Price and Rating */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xl font-bold text-blue-600">
+                      ${book.price}
+                    </span>
+                    <span className="text-sm text-gray-500 line-through">
+                      $
+                      {(parseFloat(book.price.replace("$", "")) * 1.2).toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    {renderStars(book.rating)}
+                  </div>
                 </div>
               </div>
+            </Link>
 
-              {/* Add to Cart Button */}
+            {/* Add to Cart Button */}
+            <div className="px-4 pb-4">
               <button
                 onClick={() => handleAddToCart(book.id)}
                 className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors duration-300"

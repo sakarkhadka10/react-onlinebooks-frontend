@@ -13,7 +13,7 @@ const LatestBooks = () => {
         </div>
       </header>
       <main className="mt-6">
-        <ShopPage />
+        <ShopPage items={{ latest: true, count: 8 }} />
       </main>
     </>
   );

@@ -3,7 +3,7 @@ import AnimatedButton from "../ui/AnimatedButton";
 const Genres = () => {
   return (
     <>
-      <header className="mt-10 lg:mt-14 text-center space-y-1 px-4">
+      <header className="mt-10 lg:mt-14 text-center space-y-1 px-4 bg-[#dbfce7] py-14">
         <h1 className="text-4xl font-bold">Genres</h1>
         <p className="text-xl font-normal">
           Browse Our Extensive Collection of Books Across Different Genres.
