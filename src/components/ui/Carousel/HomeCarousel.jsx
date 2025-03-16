@@ -8,19 +8,19 @@ const HomeCarousel = () => {
     {
       id: 1,
       image:
-        "https://images.unsplash.com/photo-1589998059171-988d887df646?q=80&w=1776&auto=format&fit=crop",
+        "https://res.cloudinary.com/djwk3ow1h/image/upload/t_Banner 16:9/v1742155858/Carousel2_hjcg5m.webp",
       title: "New Arrivels",
     },
     {
       id: 2,
       image:
-        "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1776&auto=format&fit=crop",
+        "https://res.cloudinary.com/djwk3ow1h/image/upload/t_Banner 16:9/v1742155858/Carousel1_j1oyl1.webp",
       title: "Tranding Books",
     },
     {
       id: 3,
       image:
-        "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=1776&auto=format&fit=crop",
+        "https://res.cloudinary.com/djwk3ow1h/image/upload/t_Banner 16:9/v1742155858/Carousel3_dolgw1.webp",
       title: "Best Offers",
     },
   ];
