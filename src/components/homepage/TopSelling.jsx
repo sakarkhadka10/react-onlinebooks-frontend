@@ -1,7 +1,13 @@
-import React from "react";
-import ShopPage from "../../pages/shop/ShopPage";
+import React, { useEffect, useState } from "react";
+import TopSellingCard from "../ui/TopSellingCard";
 
 const TopSelling = () => {
+  const [books, setBooks] = useState([]);
+  useEffect(() => {
+    fetch("/booksdata.json")
+      .then((res) => res.json())
+      .then((data) => setBooks(data));
+  });
   return (
     <>
       <section className="mt-5 lg:mt-10 px-4 mb-10">
@@ -14,7 +20,7 @@ const TopSelling = () => {
           </div>
         </header>
         <main className="mt-6">
-          <ShopPage items={{ topSelling: true, count: 4 }} />
+          <TopSellingCard books={books} />
         </main>
       </section>
     </>

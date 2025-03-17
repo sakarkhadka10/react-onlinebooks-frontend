@@ -11,9 +11,6 @@ import { createSlug } from "../../utils/helpers";
 const TopSellingCard = ({ books }) => {
   const carouselRef = useRef(null);
 
-  // Filter only top selling books
-  const topSellingBooks = books.filter(book => book.topselling === true);
-
   const handleAddToCart = (bookId) => {
     console.log(`Added book ${bookId} to cart`);
   };
@@ -43,10 +40,11 @@ const TopSellingCard = ({ books }) => {
       });
     }
   };
-
-  if (topSellingBooks.length === 0) {
-    return <div className="text-center py-8">No top selling books available</div>;
-  }
+  const getTopSellingBooks = (data, count = 8) => {
+    const topSelling = data.filter((book) => book.topselling === true);
+    return topSelling.slice(0, count);
+  };
+  const getTopSellingBooksLatest = getTopSellingBooks(books);
 
   return (
     <div className="relative">
@@ -75,7 +73,7 @@ const TopSellingCard = ({ books }) => {
           WebkitOverflowScrolling: "touch",
         }}
       >
-        {topSellingBooks.map((book) => (
+        {getTopSellingBooksLatest.map((book) => (
           <div
             key={book.id}
             className="flex-none w-[280px] bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200"
@@ -118,7 +116,9 @@ const TopSellingCard = ({ books }) => {
                     </span>
                     <span className="text-sm text-gray-500 line-through">
                       $
-                      {(parseFloat(book.price.replace("$", "")) * 1.2).toFixed(2)}
+                      {(parseFloat(book.price.replace("$", "")) * 1.2).toFixed(
+                        2
+                      )}
                     </span>
                   </div>
                   <div className="flex items-center">

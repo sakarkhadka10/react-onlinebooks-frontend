@@ -1,7 +1,18 @@
-import React from "react";
-import ShopPage from "../../pages/shop/ShopPage";
+import React, { useEffect, useMemo, useState } from "react";
+import BooksCards from "../ui/BooksCards";
 
 const LatestBooks = () => {
+  const [books, setBooks] = useState([]);
+  useEffect(() => {
+    fetch("/booksdata.json")
+      .then((res) => res.json())
+      .then((data) => setBooks(data));
+  }, []);
+
+  const getLatestBooks = useMemo(() => {
+    return [...books].sort((a, b) => b.id - a.id).slice(0, 8);
+  }, [books]);
+
   return (
     <>
       <header className="flex justify-between items-center mt-10 lg:mt-16 px-4">
@@ -12,8 +23,19 @@ const LatestBooks = () => {
           <button className="btn-dark">View All</button>
         </div>
       </header>
-      <main className="mt-6">
-        <ShopPage items={{ latest: true, count: 8 }} />
+      <main className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 place-items-center gap-6">
+        {getLatestBooks.map((book) => (
+          <BooksCards
+            key={book.id}
+            id={book.id}
+            image={book.image}
+            title={book.title}
+            author={book.author}
+            price={book.price}
+            rating={book.rating}
+            discount={book.discount}
+          />
+        ))}
       </main>
     </>
   );

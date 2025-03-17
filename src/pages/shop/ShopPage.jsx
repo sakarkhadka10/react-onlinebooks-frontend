@@ -83,19 +83,6 @@ const ShopPage = ({ items }) => {
       );
     }
 
-    // Apply specific filters from props (latest, topSelling, featured)
-    if (items?.latest) {
-      result = getLatestBooks(result, items.count);
-    } else if (items?.topSelling) {
-      result = getTopSellingBooks(result, items.count);
-    } else if (items?.featured) {
-      result = getFeatureBooks(result, items.count);
-    } else if (items && !Array.isArray(items)) {
-      // If items is provided but not an array, use the filtered results
-    } else if (Array.isArray(items)) {
-      result = items;
-    }
-
     // Apply sorting
     result = sortBooks(result, sortOption);
 
@@ -125,21 +112,6 @@ const ShopPage = ({ items }) => {
       default:
         return sortedData;
     }
-  };
-
-  const getLatestBooks = (data, count = 8) => {
-    const sortedBooks = [...data].sort((a, b) => b.id - a.id);
-    return sortedBooks.slice(0, count);
-  };
-
-  const getTopSellingBooks = (data, count = 8) => {
-    const topSelling = data.filter((book) => book.topselling === true);
-    return topSelling.slice(0, count);
-  };
-
-  const getFeatureBooks = (data, count = 8) => {
-    const featured = data.filter((book) => book.isfeature === true);
-    return featured.slice(0, count);
   };
 
   const handleCategoryChange = (e) => {
