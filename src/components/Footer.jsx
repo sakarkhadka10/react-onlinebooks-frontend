@@ -99,7 +99,6 @@ const Footer = () => {
                   <Link
                     to={link.path}
                     className="hover:text-amber-300 transition-colors"
-                    aria-label={`Go to ${link.name} page`}
                   >
                     {link.name}
                   </Link>
@@ -117,9 +116,7 @@ const Footer = () => {
                   <a
                     href={link.url}
                     target="_blank"
-                    rel="noopener noreferrer"
                     className="flex items-center hover:text-amber-300 transition-colors"
-                    aria-label={`Visit our ${link.name} page`}
                   >
                     {link.icon} {link.name}
                   </a>
@@ -137,7 +134,6 @@ const Footer = () => {
                   <Link
                     to={link.path}
                     className="hover:text-amber-300 transition-colors"
-                    aria-label={`Read our ${link.name}`}
                   >
                     {link.name}
                   </Link>
