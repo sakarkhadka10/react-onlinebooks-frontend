@@ -51,7 +51,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="w-full bg-[#2d2824] text-[var(--color-light)] py-12"
+      className="w-full bg-[#2d2824] text-[var(--color-light)] py-12 mt-6"
       aria-labelledby="footer-heading"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -144,7 +144,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="mt-8 border-t border-gray-600 pt-8 flex flex-col md:flex-row md:justify-between md:items-center">
+        <div className="mt-8 border-t border-gray-600 pt-8 flex flex-col md:flex-row md:justify-between md:items-center text-center">
           <p className="text-base">
             &copy; {currentYear} Super Books. All rights reserved.
           </p>

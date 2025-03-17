@@ -36,9 +36,11 @@ const NavBar = () => {
           <button onClick={() => setNavOpen(!navOpen)}>
             <FaBars className="text-2xl" />
           </button>
-          <div>
+
+          <Link className="/">
             <img src="/logo.png" alt="logo" />
-          </div>
+          </Link>
+
           <div className="text-2xl">
             <FaCircleUser />
           </div>
@@ -59,7 +61,9 @@ const NavBar = () => {
           >
             <div className="flex justify-between items-center ">
               <div>
-                <img src="/logo-dark.webp" alt="logo" />
+                <Link to="/">
+                  <img src="/logo-dark.webp" alt="logo" />
+                </Link>
               </div>
               <div className="text-2xl">
                 <button onClick={() => setNavOpen(!navOpen)}>
@@ -117,7 +121,9 @@ const NavBar = () => {
         <nav className="hidden lg:block">
           <div className="flex gap-4 justify-between items-center">
             <div className="flex items-center justify-between gap-6">
-              <img src="/logo.png" alt="logo" />
+              <Link className="/">
+                <img src="/logo.png" alt="logo" />
+              </Link>
               {/* Desktop Search Form */}
               <form onSubmit={handleSearch} className="relative w-64">
                 <div className="relative flex items-center">
