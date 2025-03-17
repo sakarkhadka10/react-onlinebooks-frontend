@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaShoppingCart, FaStar } from "react-icons/fa";
 import { createSlug } from "../../utils/helpers";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "../../redux/features/cart/cartSlice";
 
 const ProductDetails = () => {
   const { slug } = useParams();
@@ -24,6 +26,24 @@ const ProductDetails = () => {
       });
   }, [slug]);
 
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const isInCart = book
+    ? cartItems.some((item) => item._id === book._id)
+    : false;
+
+  const handleAddToCart = () => {
+    if (book) {
+      dispatch(addToCart(book));
+    }
+  };
+
+  const handleRemoveFromCart = () => {
+    if (book) {
+      dispatch(removeFromCart(book));
+    }
+  };
+
   const renderStars = (rating) => {
     return [...Array(5)].map((_, index) => (
       <FaStar
@@ -33,10 +53,6 @@ const ProductDetails = () => {
         }`}
       />
     ));
-  };
-
-  const handleAddToCart = (bookId) => {
-    console.log(`Added book ${bookId} to cart`);
   };
 
   if (loading) {
@@ -120,14 +136,24 @@ const ProductDetails = () => {
               </p>
             </div>
 
-            <div className="mt-8">
-              <button
-                onClick={() => handleAddToCart(book._id)}
-                className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors duration-300 w-full md:w-auto"
-              >
-                <FaShoppingCart className="text-lg" />
-                <span>Add to Cart</span>
-              </button>
+            <div className="px-4 pb-4 mt-8">
+              {isInCart ? (
+                <button
+                  onClick={handleRemoveFromCart}
+                  className="bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                >
+                  <FaShoppingCart className="text-lg" />
+                  <span>Remove From Cart</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleAddToCart}
+                  className="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                >
+                  <FaShoppingCart className="text-lg" />
+                  <span>Add to Cart</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
