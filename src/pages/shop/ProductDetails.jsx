@@ -52,7 +52,9 @@ const ProductDetails = () => {
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-800">Book Not Found</h2>
-          <p className="text-gray-600 mt-2">The book you're looking for doesn't exist.</p>
+          <p className="text-gray-600 mt-2">
+            The book you're looking for doesn't exist.
+          </p>
         </div>
       </div>
     );
@@ -82,39 +84,45 @@ const ProductDetails = () => {
 
           {/* Book Details */}
           <div className="md:w-2/3 p-6">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">{book.title}</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              {book.title}
+            </h1>
             <p className="text-gray-600 text-lg mb-4">By {book.author}</p>
-            
+
             <div className="flex items-center mb-4">
               <div className="flex mr-2">{renderStars(book.rating)}</div>
               <span className="text-gray-600">({book.rating} rating)</span>
             </div>
-            
+
             <div className="flex items-center space-x-3 mb-6">
-              <span className="text-3xl font-bold text-blue-600">{book.price}</span>
+              <span className="text-3xl font-bold text-blue-600">
+                {book.price}
+              </span>
               {book.discount > 0 && (
                 <span className="text-xl text-gray-500 line-through">
                   ${(parseFloat(book.price.replace("$", "")) * 1.2).toFixed(2)}
                 </span>
               )}
             </div>
-            
+
             <div className="prose max-w-none mb-6">
               <p className="text-gray-700">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
               </p>
               <p className="text-gray-700 mt-4">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-                culpa qui officia deserunt mollit anim id est laborum.
+                Duis aute irure dolor in reprehenderit in voluptate velit esse
+                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                cupidatat non proident, sunt in culpa qui officia deserunt
+                mollit anim id est laborum.
               </p>
             </div>
-            
+
             <div className="mt-8">
               <button
-                onClick={() => handleAddToCart(book.id)}
+                onClick={() => handleAddToCart(book._id)}
                 className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold flex items-center justify-center space-x-2 hover:bg-blue-700 transition-colors duration-300 w-full md:w-auto"
               >
                 <FaShoppingCart className="text-lg" />

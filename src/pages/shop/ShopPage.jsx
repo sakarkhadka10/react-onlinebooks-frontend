@@ -33,7 +33,7 @@ const ShopPage = ({ items }) => {
     fetch("/booksdata.json")
       .then((res) => res.json())
       .then((data) => {
-        const sortedBooks = [...data].sort((a, b) => b.id - a.id);
+        const sortedBooks = [...data].sort((a, b) => b._id - a._id);
         setBooks(sortedBooks);
 
         // Extract unique categories
@@ -94,7 +94,7 @@ const ShopPage = ({ items }) => {
 
     switch (sortBy) {
       case "newest":
-        return sortedData.sort((a, b) => b.id - a.id);
+        return sortedData.sort((a, b) => b._id - a._id);
       case "price-low":
         return sortedData.sort(
           (a, b) =>
@@ -332,8 +332,8 @@ const ShopPage = ({ items }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 place-items-center overflow-hidden">
               {filteredBooks.map((book) => (
                 <BooksCards
-                  key={book?.id}
-                  id={book?.id}
+                  key={book?._id}
+                  _id={book?._id}
                   image={book?.image}
                   title={book?.title}
                   author={book?.author}

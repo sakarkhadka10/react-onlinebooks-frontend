@@ -1,12 +1,12 @@
 import { useState } from "react";
 import {
   FaArrowRight,
-  FaArrowRightArrowLeft,
   FaBars,
   FaCircleUser,
   FaMagnifyingGlass,
   FaXmark,
 } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
@@ -27,6 +27,9 @@ const NavBar = () => {
       setNavOpen(false);
     }
   };
+
+  // Cart Feature Using Redux
+  const cartItems = useSelector((state) => state.cart.cartItems);
 
   return (
     <>
@@ -165,10 +168,17 @@ const NavBar = () => {
                 ))}
               </ul>
               <div className="flex items-center gap-7">
-                <button className="flex items-center gap-1.5 cursor-pointer font-bold">
-                  <img src="/icons/cart.png" alt="cart" className="w-6" />
-                  ()
-                </button>
+                <Link to="/cart">
+                  <button className="flex items-center gap-1.5 cursor-pointer font-bold">
+                    <img src="/icons/cart.png" alt="cart" className="w-6" />(
+                    {cartItems.length > 0 ? (
+                      <span>{cartItems.length}</span>
+                    ) : (
+                      <span>0</span>
+                    )}
+                    )
+                  </button>
+                </Link>
                 <button className="px-4 py-2 bg-amber-100 rounded-lg font-bold cursor-pointer uppercase">
                   Account
                 </button>

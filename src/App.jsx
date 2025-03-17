@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar";
 import "./app.css";
 import Footer from "./components/Footer";
 import ScrollToTop from "./utils/ScrollToTop";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -18,6 +19,16 @@ function App() {
         <footer>
           <Footer />
         </footer>
+        <div className="hidden md:block">
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              success: {
+                duration: 3000,
+              },
+            }}
+          />
+        </div>
       </div>
     </>
   );

@@ -12,7 +12,7 @@ const TrendingBooks = () => {
   const getFeatureBooks = books.filter((book) => book.isfeature === true);
 
   const getFeatureLatestBooks = useMemo(() => {
-    return [...getFeatureBooks].sort((a, b) => b.id - a.id).slice(0, 8);
+    return [...getFeatureBooks].sort((a, b) => b._id - a._id).slice(0, 8);
   }, [getFeatureBooks]);
   return (
     <>
@@ -27,8 +27,8 @@ const TrendingBooks = () => {
       <main className="grid grid-cols-1 md:gird-cols-2 lg:grid-cols-4 place-items-center gap-6">
         {getFeatureLatestBooks.map((book) => (
           <BooksCards
-            key={book.id}
-            id={book.id}
+            key={book._id}
+            _id={book._id}
             image={book.image}
             title={book.title}
             author={book.author}
