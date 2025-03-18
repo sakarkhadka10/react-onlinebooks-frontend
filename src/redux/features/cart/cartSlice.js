@@ -19,12 +19,15 @@ const cartSlice = createSlice({
       }
     },
 
+    // Remove an item from the cart
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(
         (item) => item._id !== action.payload._id
       );
       toast.error("Removed From Cart");
     },
+
+    // Clear the cart
     clearCart: (state) => {
       state.cartItems = [];
     },

@@ -1,4 +1,3 @@
-import React from "react";
 import HomeCarousel from "../../components/ui/Carousel/HomeCarousel";
 import LatestBooks from "../../components/homepage/LatestBooks";
 import TrendingBooks from "../../components/homepage/FeatureBooks";
@@ -7,22 +6,28 @@ import BannerAds from "../../components/homepage/BannerAds";
 import TopSelling from "../../components/homepage/TopSelling";
 import ProductCategorySection from "../../components/homepage/ProductCategorySection";
 import MainAds from "../../components/homepage/MainAds";
+import { Helmet } from "react-helmet";
 
 const HomePage = () => {
   return (
-    <div>
-      <HomeCarousel />
-      <div className="hidden lg:block">
-        <ProductCategorySection />
-        <MainAds />
-      </div>
-      <TopSelling />
-      <Genres />
+    <>
+      <Helmet>
+        <title>Home - Super Book</title>
+      </Helmet>
+      <div>
+        <HomeCarousel />
+        <div className="hidden lg:block">
+          <ProductCategorySection />
+          <MainAds />
+        </div>
+        <TopSelling />
+        <Genres />
 
-      <LatestBooks />
-      <BannerAds />
-      <TrendingBooks />
-    </div>
+        <LatestBooks />
+        <BannerAds />
+        <TrendingBooks />
+      </div>
+    </>
   );
 };
 

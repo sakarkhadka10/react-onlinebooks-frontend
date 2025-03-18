@@ -1,10 +1,207 @@
-import React from "react";
+import { Helmet } from "react-helmet";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart, clearCart } from "../../redux/features/cart/cartSlice";
+import { FaTrash, FaArrowLeft, FaCreditCard, FaPaypal } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 const CartPage = () => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  // Calculate cart totals
+  const subtotal = cartItems.reduce((total, item) => {
+    const price = parseFloat(item.price.replace("$", ""));
+    return total + price * (item.quantity || 1);
+  }, 0);
+
+  const handleRemoveItem = (itemId) => {
+    const itemToRemove = { _id: itemId };
+    dispatch(removeFromCart(itemToRemove));
+  };
+
+  const handleClearCart = () => {
+    dispatch(clearCart());
+    toast.success("Cart cleared successfully");
+  };
+
+  const handleCheckout = () => {
+    toast.success("Order placed successfully!");
+    dispatch(clearCart());
+    // Redirect to home or order confirmation page
+  };
+
+  // Empty cart state
+  if (cartItems.length === 0) {
+    return (
+      <>
+        <Helmet>
+          <title>Cart - Super Book</title>
+        </Helmet>
+        <div className="container mx-auto px-4 py-16 min-h-[60vh]">
+          <div className="text-center animate-fadeIn">
+            <div className="mb-8">
+              <img
+                src="/empty-cart.svg"
+                alt="Empty Cart"
+                className="w-64 mx-auto animate-scaleIn"
+              />
+            </div>
+            <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
+            <p className="text-gray-600 mb-8">
+              Looks like you haven't added anything to your cart yet.
+            </p>
+            <Link to="/shop">
+              <button className="bg-blue-600 text-white py-3 px-8 rounded-lg font-semibold inline-flex items-center hover:bg-blue-700 active:scale-95 transition-all">
+                <FaArrowLeft className="mr-2" /> Continue Shopping
+              </button>
+            </Link>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
-    <div>
-      <h1>cart</h1>
-    </div>
+    <>
+      <Helmet>
+        <title>Cart - Super Book</title>
+      </Helmet>
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-8 text-center animate-slideDown">
+          Your Shopping Cart
+        </h1>
+
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Cart Items Section */}
+          <div className="lg:w-2/3 animate-slideRight">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
+                <h2 className="text-xl font-semibold">
+                  Items ({cartItems.length})
+                </h2>
+                <button
+                  onClick={handleClearCart}
+                  className="text-red-500 hover:text-red-700 flex items-center"
+                >
+                  <FaTrash className="mr-2" /> Clear Cart
+                </button>
+              </div>
+
+              <div className="divide-y">
+                {cartItems.map((item) => (
+                  <div
+                    key={item._id}
+                    className="p-4 flex flex-col sm:flex-row gap-4 animate-fadeIn"
+                  >
+                    <div className="sm:w-1/4">
+                      <div className="bg-gray-100 rounded-lg overflow-hidden h-40 flex items-center justify-center">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="h-full object-contain p-2 hover:scale-105 transition-transform duration-200"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="sm:w-3/4 flex flex-col justify-between">
+                      <div>
+                        <Link
+                          to={`/shop/${item.title
+                            .toLowerCase()
+                            .replace(/\s+/g, "-")}`}
+                        >
+                          <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                            {item.title}
+                          </h3>
+                        </Link>
+                        <p className="text-gray-600 text-sm">
+                          By {item.author}
+                        </p>
+
+                        {item.discount > 0 && (
+                          <div className="mt-1">
+                            <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded">
+                              {item.discount}% OFF
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex justify-between items-end mt-4">
+                        <div className="flex items-center">
+                          <div className="flex border rounded overflow-hidden">
+                            <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200">
+                              -
+                            </button>
+                            <span className="px-4 py-1 border-x">
+                              {item.quantity || 1}
+                            </span>
+                            <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200">
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                          <span className="font-bold text-lg">
+                            {item.price}
+                          </span>
+                          <button
+                            onClick={() => handleRemoveItem(item._id)}
+                            className="text-red-500 hover:text-red-700 hover:scale-110 active:scale-90 transition-transform"
+                          >
+                            <FaTrash />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="p-4 bg-gray-50 border-t">
+                <Link to="/shop">
+                  <button className="text-blue-600 hover:text-blue-800 flex items-center">
+                    <FaArrowLeft className="mr-2" /> Continue Shopping
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Summary Section */}
+          <div className="lg:w-1/3 animate-slideLeft">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden sticky top-24">
+              <div className="p-4 bg-gray-50 border-b">
+                <h2 className="text-xl font-semibold">Order Summary</h2>
+              </div>
+
+              <div className="p-4 space-y-4">
+                <div className=" pt-4 flex justify-between font-bold text-lg">
+                  <span>Total</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    onClick={handleCheckout}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                  >
+                    Proceed to Checkout
+                  </button>
+                </div>
+
+                <div className="flex justify-center space-x-4 pt-2">
+                  <FaCreditCard className="text-gray-400" />
+                  <FaPaypal className="text-gray-400" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

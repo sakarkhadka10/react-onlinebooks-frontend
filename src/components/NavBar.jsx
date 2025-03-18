@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import LoginProfile from "./ui/NavBar/LoginProfile";
 
 const NavBar = () => {
   const navItems = [
@@ -30,6 +31,8 @@ const NavBar = () => {
 
   // Cart Feature Using Redux
   const cartItems = useSelector((state) => state.cart.cartItems);
+
+  const isLogin = true;
 
   return (
     <>
@@ -179,9 +182,15 @@ const NavBar = () => {
                     )
                   </button>
                 </Link>
-                <button className="px-4 py-2 bg-amber-100 rounded-lg font-bold cursor-pointer uppercase">
-                  Account
-                </button>
+                {isLogin ? (
+                  <LoginProfile />
+                ) : (
+                  <Link to="/login">
+                    <button className="bg-amber-100 px-4 py-2 rounded-lg cursor-pointer font-bold">
+                      <span>Account</span>
+                    </button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>

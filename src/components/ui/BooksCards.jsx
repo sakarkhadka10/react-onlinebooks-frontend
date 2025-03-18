@@ -92,7 +92,7 @@ const BooksCards = (book) => {
         {isInCart ? (
           <button
             onClick={() => handleRemoveFromCart()}
-            className="w-full bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2 "
+            className="w-full cursor-pointer bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2 "
           >
             <FaShoppingCart className="text-lg" />
             <span>Remove From Cart</span>
@@ -100,7 +100,7 @@ const BooksCards = (book) => {
         ) : (
           <button
             onClick={() => handleAddToCart()}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2 "
+            className="w-full cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2 "
           >
             <FaShoppingCart className="text-lg" />
             <span>Add to Cart</span>
