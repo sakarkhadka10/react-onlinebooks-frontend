@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Helmet } from "react-helmet";
 
 const RegisterPage = () => {
+  const registerApi = `${import.meta.env.VITE_SECRET_KEY_URI}/auth/register`;
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setcredentials] = useState({
-    name: "",
+    fname: "",
+    lname: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -15,6 +17,36 @@ const RegisterPage = () => {
   const submitButtonHandler = async (e) => {
     e.preventDefault();
     console.log("Form submission triggered");
+    const { fname, lname, email, password, confirmPassword } = credentials;
+
+    //Check If Password & Confirm Password Match Or Not
+    if (password !== confirmPassword) {
+      console.log("Password Do not match");
+      return;
+    }
+
+    const response = await fetch(registerApi, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fname,
+        lname,
+        email,
+        password,
+      }),
+    });
+    const data = await response.json();
+
+    console.log("Form Submitted", data);
+    if (data.authToken) {
+      localStorage.setItem("token", data.authToken);
+      alert("Registered Successfully");
+      navigate("/login");
+    } else {
+      console.log("Register Failed");
+    }
   };
 
   const changeHandler = (e) => {
@@ -23,9 +55,6 @@ const RegisterPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Register - Super Book</title>
-      </Helmet>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Form Section */}
@@ -35,18 +64,33 @@ const RegisterPage = () => {
             </h2>
             <form className="space-y-4" onSubmit={submitButtonHandler}>
               {/* Name */}
-              <div>
-                <label className="block text-gray-700 font-medium mb-2">
-                  Name
-                </label>
-                <input
-                  name="name"
-                  value={credentials.name}
-                  onChange={changeHandler}
-                  type="text"
-                  placeholder="Enter your name"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2">
+                    First Name
+                  </label>
+                  <input
+                    name="fname"
+                    value={credentials.fname}
+                    onChange={changeHandler}
+                    type="text"
+                    placeholder="Enter your first name"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    name="lname"
+                    value={credentials.lname}
+                    onChange={changeHandler}
+                    type="text"
+                    placeholder="Enter your last name"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  />
+                </div>
               </div>
               {/* Email */}
               <div>

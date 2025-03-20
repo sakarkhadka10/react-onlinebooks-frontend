@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Helmet } from "react-helmet";
 
 const LoginPage = () => {
+  // const getUserApi = `${import.meta.env.VITE_SECRET_KEY_URI}/auth/login`;
+  // const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
@@ -19,9 +20,6 @@ const LoginPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Login - Super Book</title>
-      </Helmet>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="w-full md:w-1/2">

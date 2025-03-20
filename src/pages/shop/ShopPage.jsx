@@ -3,7 +3,6 @@ import BooksCards from "../../components/ui/BooksCards";
 import { FaFilter, FaTimes } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import { Helmet } from "react-helmet";
 
 const ShopPage = ({ items }) => {
   const [searchParams] = useSearchParams();
@@ -152,10 +151,6 @@ const ShopPage = ({ items }) => {
 
   return (
     <>
-      <Helmet>
-        <title>Shop - Super Books</title>
-      </Helmet>
-
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-6 relative">
           {/* Filter Section - Mobile Toggle */}

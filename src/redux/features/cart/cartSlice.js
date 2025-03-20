@@ -14,7 +14,16 @@ const cartSlice = createSlice({
         (item) => item._id === action.payload._id
       );
       if (!existingItem) {
-        state.cartItems.push(action.payload);
+        // Calculate newPrice based on price and discount
+        const price = parseFloat(action.payload.price.replace("$", ""));
+        const discount = action.payload.discount || 0;
+        const newPrice = price - (price * discount / 100);
+        
+        state.cartItems.push({
+          ...action.payload,
+          quantity: 1,
+          newPrice
+        });
         toast.success("Added To Cart");
       }
     },
@@ -27,6 +36,20 @@ const cartSlice = createSlice({
       toast.error("Removed From Cart");
     },
 
+    // Update quantity
+    updateQuantity: (state, action) => {
+      const { id, quantity } = action.payload;
+      const item = state.cartItems.find(item => item._id === id);
+      if (item) {
+        item.quantity = quantity;
+        // Update newPrice based on quantity
+        const price = parseFloat(item.price.replace("$", ""));
+        const discount = item.discount || 0;
+        const singlePrice = price - (price * discount / 100);
+        item.newPrice = singlePrice * quantity;
+      }
+    },
+
     // Clear the cart
     clearCart: (state) => {
       state.cartItems = [];
@@ -35,7 +58,7 @@ const cartSlice = createSlice({
 });
 
 // Export the actions
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart, updateQuantity } = cartSlice.actions;
 
 // Export the reducer
 export default cartSlice.reducer;

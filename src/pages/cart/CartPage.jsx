@@ -1,18 +1,21 @@
-import { Helmet } from "react-helmet";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, clearCart } from "../../redux/features/cart/cartSlice";
+import {
+  removeFromCart,
+  clearCart,
+  updateQuantity,
+} from "../../redux/features/cart/cartSlice";
 import { FaTrash, FaArrowLeft, FaCreditCard, FaPaypal } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 const CartPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
   // Calculate cart totals
   const subtotal = cartItems.reduce((total, item) => {
-    const price = parseFloat(item.price.replace("$", ""));
-    return total + price * (item.quantity || 1);
+    return total + (item.newPrice || 0);
   }, 0);
 
   const handleRemoveItem = (itemId) => {
@@ -26,18 +29,18 @@ const CartPage = () => {
   };
 
   const handleCheckout = () => {
-    toast.success("Order placed successfully!");
-    dispatch(clearCart());
-    // Redirect to home or order confirmation page
+    navigate("/checkout");
+  };
+
+  const handleQuantityChange = (id, newQuantity) => {
+    if (newQuantity < 1) return;
+    dispatch(updateQuantity({ id, quantity: newQuantity }));
   };
 
   // Empty cart state
   if (cartItems.length === 0) {
     return (
       <>
-        <Helmet>
-          <title>Cart - Super Book</title>
-        </Helmet>
         <div className="container mx-auto px-4 py-16 min-h-[60vh]">
           <div className="text-center animate-fadeIn">
             <div className="mb-8">
@@ -64,9 +67,6 @@ const CartPage = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Cart - Super Book</title>
-      </Helmet>
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-8 text-center animate-slideDown">
           Your Shopping Cart
@@ -131,13 +131,29 @@ const CartPage = () => {
                       <div className="flex justify-between items-end mt-4">
                         <div className="flex items-center">
                           <div className="flex border rounded overflow-hidden">
-                            <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200">
+                            <button
+                              className="px-3 py-1 bg-gray-100 hover:bg-gray-200"
+                              onClick={() =>
+                                handleQuantityChange(
+                                  item._id,
+                                  (item.quantity || 1) - 1
+                                )
+                              }
+                            >
                               -
                             </button>
                             <span className="px-4 py-1 border-x">
                               {item.quantity || 1}
                             </span>
-                            <button className="px-3 py-1 bg-gray-100 hover:bg-gray-200">
+                            <button
+                              className="px-3 py-1 bg-gray-100 hover:bg-gray-200"
+                              onClick={() =>
+                                handleQuantityChange(
+                                  item._id,
+                                  (item.quantity || 1) + 1
+                                )
+                              }
+                            >
                               +
                             </button>
                           </div>
@@ -145,7 +161,12 @@ const CartPage = () => {
 
                         <div className="flex items-center gap-4">
                           <span className="font-bold text-lg">
-                            {item.price}
+                            $
+                            {item.newPrice
+                              ? item.newPrice.toFixed(2)
+                              : parseFloat(item.price.replace("$", "")).toFixed(
+                                  2
+                                )}
                           </span>
                           <button
                             onClick={() => handleRemoveItem(item._id)}

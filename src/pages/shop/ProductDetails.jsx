@@ -34,7 +34,16 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     if (book) {
-      dispatch(addToCart(book));
+      // Calculate newPrice based on price and discount
+      const price = parseFloat(book.price.replace("$", ""));
+      const discount = book.discount || 0;
+      const newPrice = price - (price * discount / 100);
+      
+      dispatch(addToCart({
+        ...book,
+        quantity: 1,
+        newPrice
+      }));
     }
   };
 
@@ -163,3 +172,4 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
