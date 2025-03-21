@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const LoginProfile = () => {
+const LoginProfile = ({ handleLogout, user }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const userType = "user";
+
+  const userType = user?.usertype || "user";
 
   return (
     <div className="relative flex items-center gap-4 z-50">
@@ -14,11 +15,11 @@ const LoginProfile = () => {
         onMouseLeave={() => setIsDropdownOpen(false)} // Hide dropdown when mouse leaves the area
       >
         {/* Profile image button */}
-        <button className=" px-4 py-2 rounded-lg cursor-pointer font-bold  flex items-center">
+        <button className=" text-white px-4 py-2 rounded-lg cursor-pointer font-bold  flex items-center">
           <img
             className="w-11 h-11 rounded-full"
             src="/profiles/profile1.webp"
-            alt="user"
+            alt={user?.name}
           />
         </button>
 
@@ -27,7 +28,7 @@ const LoginProfile = () => {
           <div className="absolute right-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
             <ul className="py-2">
               <li>
-                <span className="block px-4 py-2 font-bold">{`Welcome, Sakar`}</span>
+                <span className="block px-4 py-2 font-bold">{`Welcome, ${user?.name}`}</span>
               </li>
               {/* Show Administration only if usertype is "admin" */}
 
@@ -65,7 +66,10 @@ const LoginProfile = () => {
               </li>
 
               <li>
-                <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                <button
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                >
                   Logout
                 </button>
               </li>
@@ -78,7 +82,7 @@ const LoginProfile = () => {
           <div className="absolute right-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
             <ul className="py-2">
               <li>
-                <span className="block px-4 py-2 font-bold">{`Welcome, User Sakar`}</span>
+                <span className="block px-4 py-2 font-bold">{`Welcome, ${user?.fname}`}</span>
               </li>
               <li>
                 <Link
@@ -90,20 +94,13 @@ const LoginProfile = () => {
               </li>
               <li>
                 <Link
-                  to={"/userscollection"}
+                  to={"/orders"}
                   className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
                 >
-                  <span className="mr-2">👤</span> Collections
+                  <span className="mr-2">🛒</span> Orders
                 </Link>
               </li>
-              <li>
-                <a
-                  href="/transactions"
-                  className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
-                >
-                  <span className="mr-2">🛒</span> Transactions
-                </a>
-              </li>
+
               <li>
                 <a
                   href="/invoice"
@@ -121,7 +118,10 @@ const LoginProfile = () => {
                 </a>
               </li>
               <li>
-                <button className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center">
+                <button
+                  onClick={handleLogout}
+                  className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer"
+                >
                   Logout
                 </button>
               </li>

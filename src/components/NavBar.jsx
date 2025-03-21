@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   FaArrowRight,
   FaBars,
@@ -9,6 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import LoginProfile from "./ui/NavBar/LoginProfile";
+import { AuthContext } from "../context/Auth/AuthContext";
 
 const NavBar = () => {
   const navItems = [
@@ -21,6 +22,15 @@ const NavBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  // Auth For User Profile
+  const authCtx = useContext(AuthContext);
+  const { user, isLoggedIn, logout } = authCtx;
+  const handleLogout = () => {
+    logout(); // Use context logout
+    navigate("/login");
+  };
+  console.log(user);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -31,8 +41,6 @@ const NavBar = () => {
 
   // Cart Feature Using Redux
   const cartItems = useSelector((state) => state.cart.cartItems);
-
-  const isLogin = false;
 
   return (
     <>
@@ -182,8 +190,8 @@ const NavBar = () => {
                     )
                   </button>
                 </Link>
-                {isLogin ? (
-                  <LoginProfile />
+                {isLoggedIn ? (
+                  <LoginProfile handleLogout={handleLogout} user={user} />
                 ) : (
                   <Link to="/login">
                     <button className="bg-amber-100 px-4 py-2 rounded-lg cursor-pointer font-bold">
