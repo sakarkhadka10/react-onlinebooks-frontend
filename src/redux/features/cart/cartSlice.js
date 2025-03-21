@@ -14,15 +14,11 @@ const cartSlice = createSlice({
         (item) => item._id === action.payload._id
       );
       if (!existingItem) {
-        // Calculate newPrice based on price and discount
-        const price = parseFloat(action.payload.price.replace("$", ""));
-        const discount = action.payload.discount || 0;
-        const newPrice = price - (price * discount / 100);
-        
+        // Use the newPrice that was calculated in the component
         state.cartItems.push({
           ...action.payload,
           quantity: 1,
-          newPrice
+          newPrice: action.payload.newPrice || action.payload.price
         });
         toast.success("Added To Cart");
       }

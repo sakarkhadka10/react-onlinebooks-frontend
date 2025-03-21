@@ -3,6 +3,7 @@ import BooksCards from "../../components/ui/BooksCards";
 import { FaFilter, FaTimes } from "react-icons/fa";
 import { useSearchParams } from "react-router-dom";
 import { FaMagnifyingGlass } from "react-icons/fa6";
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const ShopPage = ({ items }) => {
   const [searchParams] = useSearchParams();
@@ -29,32 +30,29 @@ const ShopPage = ({ items }) => {
     }));
   }, [urlSearchQuery]);
 
+  const { data: allBooks = [] } = useFetchAllBooksQuery();
+
   useEffect(() => {
-    fetch("/booksdata.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const sortedBooks = [...data].sort((a, b) => b._id - a._id);
-        setBooks(sortedBooks);
+    if (allBooks.length > 0) {
+      const sortedBooks = [...allBooks].sort((a, b) => b._id - a._id);
+      setBooks(sortedBooks);
 
-        // Extract unique categories
-        const uniqueCategories = [
-          ...new Set(data.map((book) => book.category || "Uncategorized")),
-        ];
-        setCategories(uniqueCategories);
+      // Extract unique categories
+      const uniqueCategories = [
+        ...new Set(allBooks.map((book) => book.category || "Uncategorized")),
+      ];
+      setCategories(uniqueCategories);
 
-        // Find max price for range
-        const highestPrice = Math.max(
-          ...data.map((book) => parseFloat(book.price.replace("$", "")))
-        );
-        setMaxPrice(Math.ceil(highestPrice));
-        setPriceRange({ min: 0, max: Math.ceil(highestPrice) });
-        setFilters((prev) => ({
-          ...prev,
-          priceRange: { min: 0, max: Math.ceil(highestPrice) },
-        }));
-      })
-      .catch((error) => console.error("Error fetching books:", error));
-  }, []);
+      // Find max price for range
+      const highestPrice = Math.max(...allBooks.map((book) => book.price));
+      setMaxPrice(Math.ceil(highestPrice));
+      setPriceRange({ min: 0, max: Math.ceil(highestPrice) });
+      setFilters((prev) => ({
+        ...prev,
+        priceRange: { min: 0, max: Math.ceil(highestPrice) },
+      }));
+    }
+  }, [allBooks]);
 
   useEffect(() => {
     let result = [...books];
@@ -64,9 +62,9 @@ const ShopPage = ({ items }) => {
       result = result.filter((book) => book.category === filters.category);
     }
 
-    // Apply price filter
+    // Apply price filter - handle both string and number price formats
     result = result.filter((book) => {
-      const bookPrice = parseFloat(book.price.replace("$", ""));
+      const bookPrice = book.price;
       return (
         bookPrice >= filters.priceRange.min &&
         bookPrice <= filters.priceRange.max
@@ -335,7 +333,7 @@ const ShopPage = ({ items }) => {
                   <BooksCards
                     key={book?._id}
                     _id={book?._id}
-                    image={book?.image}
+                    coverImage={book?.coverImage}
                     title={book?.title}
                     author={book?.author}
                     price={book?.price}

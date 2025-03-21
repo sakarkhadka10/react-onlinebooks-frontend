@@ -11,19 +11,23 @@ const BooksCards = (book) => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const isInCart = cartItems.some((items) => items._id === book._id);
 
-  const cartItem = {
-    _id: book._id,
-    title: book.title,
-    author: book.author,
-    price: book.price,
-    image: book.image,
-    discount: book.discount,
-  };
   const handleAddToCart = () => {
-    dispatch(addToCart(cartItem));
+    // Calculate newPrice based on price and discount
+    const price = book.price;
+    const discount = book.discount || 0;
+    const newPrice = price - (price * discount) / 100;
+
+    dispatch(
+      addToCart({
+        ...book,
+        quantity: 1,
+        newPrice,
+      })
+    );
   };
+  const discountPrice = book ? book.price * (book.discount / 100) : 0;
   const handleRemoveFromCart = () => {
-    dispatch(removeFromCart(cartItem));
+    dispatch(removeFromCart(book));
   };
 
   const renderStars = (rating) => {
@@ -45,7 +49,7 @@ const BooksCards = (book) => {
         {/* Image Container */}
         <div className="relative overflow-hidden group h-[200px]">
           <img
-            src={book?.image}
+            src={book?.coverImage}
             alt={book?.title}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
           />
@@ -74,13 +78,18 @@ const BooksCards = (book) => {
 
           {/* Price and Rating */}
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-blue-600">
-                {book?.price}
+            <div className=" flex items-center space-x-2">
+              <span className="text-2xl font-bold text-blue-600">
+                Rs.{" "}
+                {book.discount > 0 ? (
+                  <span>{(book.price - discountPrice).toFixed(2)}</span>
+                ) : (
+                  book.price
+                )}
               </span>
-              <span className="text-sm text-gray-500 line-through">
-                ${(parseFloat(book?.price.replace("$", "")) * 1.2).toFixed(2)}
-              </span>
+              <sup className=" text-lg font-bold text-gray-500 line-through">
+                {book.discount > 0 && book.price}
+              </sup>
             </div>
             <div className="flex items-center">{renderStars(book?.rating)}</div>
           </div>

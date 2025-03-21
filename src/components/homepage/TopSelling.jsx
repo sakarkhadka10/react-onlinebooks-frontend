@@ -1,15 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import BooksCards from "../ui/BooksCards";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const TopSelling = () => {
-  const [books, setBooks] = useState([]);
-  useEffect(() => {
-    fetch("/booksdata.json")
-      .then((res) => res.json())
-      .then((data) => setBooks(data));
-  });
-
+  const { data: books = [] } = useFetchAllBooksQuery();
   const carouselRef = useRef(null);
   const scroll = (direction) => {
     if (carouselRef.current) {
@@ -72,7 +67,7 @@ const TopSelling = () => {
                 <BooksCards
                   key={book._id}
                   _id={book._id}
-                  image={book.image}
+                  coverImage={book.coverImage}
                   title={book.title}
                   author={book.author}
                   price={book.price}

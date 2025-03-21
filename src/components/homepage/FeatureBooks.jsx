@@ -1,13 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import BooksCards from "../ui/BooksCards";
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const TrendingBooks = () => {
-  const [books, setBooks] = useState([]);
-  useEffect(() => {
-    fetch("/booksdata.json")
-      .then((res) => res.json())
-      .then((data) => setBooks(data));
-  }, []);
+  const { data: books = [] } = useFetchAllBooksQuery();
 
   const getFeatureBooks = books.filter((book) => book.isfeature === true);
 
@@ -29,7 +25,7 @@ const TrendingBooks = () => {
           <BooksCards
             key={book._id}
             _id={book._id}
-            image={book.image}
+            coverImage={book.coverImage}
             title={book.title}
             author={book.author}
             price={book.price}

@@ -4,27 +4,24 @@ import { FaShoppingCart, FaStar } from "react-icons/fa";
 import { createSlug } from "../../utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../../redux/features/cart/cartSlice";
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const ProductDetails = () => {
   const { slug } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { data: allBooks = [], isLoading } = useFetchAllBooksQuery();
 
   useEffect(() => {
-    setLoading(true);
-    fetch("/booksdata.json")
-      .then((res) => res.json())
-      .then((data) => {
-        // Find the book by comparing slugs
-        const foundBook = data.find((item) => createSlug(item.title) === slug);
-        setBook(foundBook);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching book details:", error);
-        setLoading(false);
-      });
-  }, [slug]);
+    if (!isLoading && allBooks.length > 0) {
+      // Find the book by comparing slugs
+      const foundBook = allBooks.find(
+        (item) => createSlug(item.title) === slug
+      );
+      setBook(foundBook);
+      setLoading(false);
+    }
+  }, [slug, allBooks, isLoading]);
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -35,17 +32,21 @@ const ProductDetails = () => {
   const handleAddToCart = () => {
     if (book) {
       // Calculate newPrice based on price and discount
-      const price = parseFloat(book.price.replace("$", ""));
+      const price = book.price;
       const discount = book.discount || 0;
-      const newPrice = price - (price * discount / 100);
-      
-      dispatch(addToCart({
-        ...book,
-        quantity: 1,
-        newPrice
-      }));
+      const newPrice = price - (price * discount) / 100;
+
+      dispatch(
+        addToCart({
+          ...book,
+          quantity: 1,
+          newPrice,
+        })
+      );
     }
   };
+
+  const discountPrice = book ? book.price * (book.discount / 100) : 0;
 
   const handleRemoveFromCart = () => {
     if (book) {
@@ -93,7 +94,7 @@ const ProductDetails = () => {
           <div className="md:w-1/3 p-6">
             <div className="relative overflow-hidden rounded-lg h-[400px]">
               <img
-                src={book.image}
+                src={book.coverImage}
                 alt={book.title}
                 className="w-full h-full object-cover"
               />
@@ -121,13 +122,15 @@ const ProductDetails = () => {
 
             <div className="flex items-center space-x-3 mb-6">
               <span className="text-3xl font-bold text-blue-600">
-                {book.price}
+                {book.discount > 0 ? (
+                  <span>${(book.price - discountPrice).toFixed(2)}</span>
+                ) : (
+                  book.price
+                )}
               </span>
-              {book.discount > 0 && (
-                <span className="text-xl text-gray-500 line-through">
-                  ${(parseFloat(book.price.replace("$", "")) * 1.2).toFixed(2)}
-                </span>
-              )}
+              <sup className=" text-lg font-bold text-gray-500 line-through">
+                {book.discount > 0 && book.price}
+              </sup>
             </div>
 
             <div className="prose max-w-none mb-6">
@@ -172,4 +175,3 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
-

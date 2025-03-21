@@ -1,13 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import BooksCards from "../ui/BooksCards";
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const LatestBooks = () => {
-  const [books, setBooks] = useState([]);
-  useEffect(() => {
-    fetch("/booksdata.json")
-      .then((res) => res.json())
-      .then((data) => setBooks(data));
-  }, []);
+  const { data: books = [] } = useFetchAllBooksQuery();
 
   const getLatestBooks = useMemo(() => {
     return [...books].sort((a, b) => b._id - a._id).slice(0, 8);
@@ -28,7 +24,7 @@ const LatestBooks = () => {
           <BooksCards
             key={book._id}
             _id={book._id}
-            image={book.image}
+            coverImage={book.coverImage}
             title={book.title}
             author={book.author}
             price={book.price}

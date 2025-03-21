@@ -97,7 +97,7 @@ const CartPage = () => {
                     <div className="sm:w-1/4">
                       <div className="bg-gray-100 rounded-lg overflow-hidden h-40 flex items-center justify-center">
                         <img
-                          src={item.image}
+                          src={item.coverImage}
                           alt={item.title}
                           className="h-full object-contain p-2 hover:scale-105 transition-transform duration-200"
                         />
