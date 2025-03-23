@@ -140,25 +140,31 @@ const ProductDetails = () => {
             <div className="prose max-w-none mb-14">
               <p className="text-gray-700">{book.description}</p>
             </div>
-
-            <div className="px-4 pb-4 mt-8 absolute bottom-0">
-              {isInCart ? (
-                <button
-                  onClick={handleRemoveFromCart}
-                  className="bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
-                >
-                  <FaShoppingCart className="text-lg" />
-                  <span>Remove From Cart</span>
-                </button>
-              ) : (
-                <button
-                  onClick={handleAddToCart}
-                  className="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
-                >
-                  <FaShoppingCart className="text-lg" />
-                  <span>Add to Cart</span>
-                </button>
-              )}
+            <div className="flex gap-4 items-center">
+              <div className="px-4 pb-4 mt-8 ">
+                {isInCart ? (
+                  <button
+                    onClick={handleRemoveFromCart}
+                    className="bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                  >
+                    <FaShoppingCart className="text-lg" />
+                    <span>Remove From Cart</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleAddToCart}
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                  >
+                    <FaShoppingCart className="text-lg" />
+                    <span>Add to Cart</span>
+                  </button>
+                )}
+              </div>
+              <div>
+                <p className="text-green-500 text-sm font-semibold mt-2">
+                  Available Stock: {book.stock}
+                </p>
+              </div>
             </div>
           </div>
         </div>

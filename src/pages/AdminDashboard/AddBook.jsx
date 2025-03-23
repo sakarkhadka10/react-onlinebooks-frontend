@@ -153,12 +153,11 @@ const AddBook = () => {
             >
               <option value="">Select a category</option>
               <option value="Fiction">Fiction</option>
-              <option value="Non-Fiction">Non-Fiction</option>
               <option value="Science">Science</option>
               <option value="Technology">Technology</option>
               <option value="History">History</option>
               <option value="Biography">Biography</option>
-              <option value="Self-Help">Self-Help</option>
+              <option value="Self-Help">Romantic</option>
               <option value="Business">Business</option>
               <option value="Children">Children</option>
               <option value="Other">Other</option>

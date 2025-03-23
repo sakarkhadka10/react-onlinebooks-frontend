@@ -332,6 +332,7 @@ const ShopPage = ({ items }) => {
                     rating={book?.rating}
                     discount={book?.discount}
                     category={book?.category}
+                    stock={book?.stock}
                   />
                 ))}
               </div>

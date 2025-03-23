@@ -35,6 +35,7 @@ const TrendingBooks = () => {
             rating={book.rating}
             discount={book.discount}
             category={book.category}
+            stock={book.stock}
           />
         ))}
       </main>

@@ -11,13 +11,14 @@ const Genres = () => {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4 mt-5">
-            <AnimatedButton name="Action" active={true} />
-            <AnimatedButton name="Adventure" active={true} />
-            <AnimatedButton name="Comedy" active={true} />
-            <AnimatedButton name="Fantasy" active={true} />
-            <AnimatedButton name="Horror" active={true} />
-            <AnimatedButton name="Mystery" active={true} />
-            <AnimatedButton name="Romance" active={true} />
+            <AnimatedButton name="Fiction" active={true} />
+            <AnimatedButton name="Science" active={true} />
+            <AnimatedButton name="Technology" active={true} />
+            <AnimatedButton name="History" active={true} />
+            <AnimatedButton name="Biography" active={true} />
+            <AnimatedButton name="Romantic" active={true} />
+            <AnimatedButton name="Business" active={true} />
+            <AnimatedButton name="Children" active={true} />
           </div>
         </div>
       </header>

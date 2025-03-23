@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaShoppingCart, FaStar } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { createSlug } from "../../utils/helpers";
 import toast from "react-hot-toast";
 
@@ -11,17 +11,16 @@ const BooksCards = (book) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const isInCart = cartItems.some((items) => items._id === book._id);
+
   const currentQuantityInCart =
     cartItems.find((item) => item._id === book._id)?.quantity || 0;
 
   const handleAddToCart = () => {
-    // Check if adding to cart would exceed stock
     if (currentQuantityInCart >= book.stock) {
       toast.error(`Sorry, only ${book.stock} items available in stock`);
       return;
     }
 
-    // Calculate newPrice based on price and discount
     const price = book.price;
     const discount = book.discount || 0;
     const newPrice = price - (price * discount) / 100;
@@ -62,7 +61,7 @@ const BooksCards = (book) => {
             alt={book?.title}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
           />
-          {/* Discount Badge */}
+          {/* Category Badge */}
           {book.category && (
             <div className="absolute top-2 left-2">
               <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
@@ -70,7 +69,6 @@ const BooksCards = (book) => {
               </span>
             </div>
           )}
-
           {/* Discount Badge */}
           {book?.discount > 0 && (
             <div className="absolute top-2 right-2">
@@ -95,7 +93,7 @@ const BooksCards = (book) => {
 
           {/* Price and Rating */}
           <div className="flex justify-between items-center">
-            <div className=" flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <span className="text-2xl font-bold text-blue-600">
                 {book.discount > 0 ? (
                   <span>Rs. {(book.price - discountPrice).toFixed(2)}</span>
@@ -103,7 +101,7 @@ const BooksCards = (book) => {
                   <span>Rs. {book.price}</span>
                 )}
               </span>
-              <sup className=" text-lg font-bold text-gray-500 line-through">
+              <sup className="text-lg font-bold text-gray-500 line-through">
                 {book.discount > 0 && book.price}
               </sup>
             </div>
@@ -112,20 +110,8 @@ const BooksCards = (book) => {
         </div>
       </Link>
 
-      {/* Add to Cart Button */}
-      <div className="px-4 pb-4">
-        {book.stock <= 0 && (
-          <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-            Out of Stock
-          </span>
-        )}
-
-        {book.stock > 0 && book.stock <= 5 && (
-          <span className="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">
-            Low Stock
-          </span>
-        )}
-
+      {/* Button and Stock Container */}
+      <div className="px-4 pb-4 flex items-center justify-between">
         <button
           onClick={isInCart ? handleRemoveFromCart : handleAddToCart}
           disabled={!isInCart && book.stock <= 0}
@@ -143,6 +129,19 @@ const BooksCards = (book) => {
             ? "Out of Stock"
             : "Add to Cart"}
         </button>
+
+        {/* Stock Information */}
+        {book.stock <= 0 ? (
+          <span className="hidden">Out of Stock</span>
+        ) : book.stock <= 5 ? (
+          <span className="text-yellow-500 text-sm font-semibold">
+            Only {book.stock} left
+          </span>
+        ) : (
+          <span className="text-green-500 text-sm font-semibold">
+            In Stock ({book.stock})
+          </span>
+        )}
       </div>
     </div>
   );
