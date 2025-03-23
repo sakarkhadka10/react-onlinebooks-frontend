@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useFetchBookByIdQuery, useUpdateBookMutation } from "../../redux/features/books/booksApi";
+import {
+  useFetchBookByIdQuery,
+  useUpdateBookMutation,
+} from "../../redux/features/books/booksApi";
 import { toast } from "react-hot-toast";
-import { FaBook, FaSave, FaArrowLeft } from "react-icons/fa";
 import Loading from "../../components/ui/Loading";
+import { FaArrowLeft, FaBook, FaSave } from "react-icons/fa";
 
 const EditBook = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: book, isLoading: isFetching } = useFetchBookByIdQuery(id);
+  const { data: book, isLoading } = useFetchBookByIdQuery(id);
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
-  
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -22,7 +24,7 @@ const EditBook = () => {
     discount: 0,
     rating: 0,
     topselling: false,
-    isfeature: false
+    isfeature: false,
   });
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const EditBook = () => {
         discount: book.discount || 0,
         rating: book.rating || 0,
         topselling: book.topselling || false,
-        isfeature: book.isfeature || false
+        isfeature: book.isfeature || false,
       });
     }
   }, [book]);
@@ -47,17 +49,23 @@ const EditBook = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" 
-        ? checked 
-        : (name === "price" || name === "stock" || name === "rating" || name === "discount")
-          ? value === "" ? "" : Number(value)
-          : value
+      [name]:
+        type === "checkbox"
+          ? checked
+          : name === "price" ||
+            name === "stock" ||
+            name === "rating" ||
+            name === "discount"
+          ? value === ""
+            ? ""
+            : Number(value)
+          : value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       await updateBook({ id, ...formData }).unwrap();
       toast.success("Book updated successfully!");
@@ -68,7 +76,7 @@ const EditBook = () => {
     }
   };
 
-  if (isFetching) return <Loading />;
+  if (isLoading) return <Loading />;
 
   return (
     <div>
@@ -84,11 +92,17 @@ const EditBook = () => {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded-lg p-6"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Title */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="title"
+            >
               Title *
             </label>
             <input
@@ -104,7 +118,10 @@ const EditBook = () => {
 
           {/* Author */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="author">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="author"
+            >
               Author *
             </label>
             <input
@@ -120,23 +137,40 @@ const EditBook = () => {
 
           {/* Category */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="category"
+            >
               Category *
             </label>
-            <input
-              type="text"
+            <select
               id="category"
               name="category"
               value={formData.category}
               onChange={handleChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
-            />
+            >
+              <option value="">Select a category</option>
+              <option value="Fiction">Fiction</option>
+              <option value="Non-Fiction">Non-Fiction</option>
+              <option value="Science">Science</option>
+              <option value="Technology">Technology</option>
+              <option value="History">History</option>
+              <option value="Biography">Biography</option>
+              <option value="Self-Help">Self-Help</option>
+              <option value="Business">Business</option>
+              <option value="Children">Children</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
           {/* Price */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="price">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="price"
+            >
               Price *
             </label>
             <input
@@ -154,7 +188,10 @@ const EditBook = () => {
 
           {/* Stock */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="stock">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="stock"
+            >
               Stock *
             </label>
             <input
@@ -171,7 +208,10 @@ const EditBook = () => {
 
           {/* Cover Image */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="coverImage">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="coverImage"
+            >
               Cover Image URL *
             </label>
             <input
@@ -187,7 +227,10 @@ const EditBook = () => {
 
           {/* Discount */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="discount">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="discount"
+            >
               Discount (%)
             </label>
             <input
@@ -204,7 +247,10 @@ const EditBook = () => {
 
           {/* Rating */}
           <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="rating">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="rating"
+            >
               Rating
             </label>
             <input
@@ -230,7 +276,10 @@ const EditBook = () => {
               onChange={handleChange}
               className="mr-2"
             />
-            <label className="text-gray-700 text-sm font-bold" htmlFor="topselling">
+            <label
+              className="text-gray-700 text-sm font-bold"
+              htmlFor="topselling"
+            >
               Top Selling
             </label>
           </div>
@@ -245,7 +294,10 @@ const EditBook = () => {
               onChange={handleChange}
               className="mr-2"
             />
-            <label className="text-gray-700 text-sm font-bold" htmlFor="isfeature">
+            <label
+              className="text-gray-700 text-sm font-bold"
+              htmlFor="isfeature"
+            >
               Featured
             </label>
           </div>
@@ -253,7 +305,10 @@ const EditBook = () => {
 
         {/* Description */}
         <div className="mt-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="description"
+          >
             Description *
           </label>
           <textarea
@@ -289,5 +344,3 @@ const EditBook = () => {
 };
 
 export default EditBook;
-
-
