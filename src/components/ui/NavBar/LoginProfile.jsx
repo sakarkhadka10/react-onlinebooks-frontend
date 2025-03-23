@@ -28,10 +28,11 @@ const LoginProfile = ({ handleLogout, user }) => {
           <div className="absolute right-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
             <ul className="py-2">
               <li>
-                <span className="block px-4 py-2 font-bold">{`Welcome, ${user?.name}`}</span>
+                <span className="block px-4 py-2 font-bold">
+                  {`Welcome, ${user?.fname || user?.name || user?.email?.split('@')[0] || 'Admin'}`}
+                </span>
               </li>
               {/* Show Administration only if usertype is "admin" */}
-
               <li>
                 <Link
                   to="/admin"
@@ -82,7 +83,9 @@ const LoginProfile = ({ handleLogout, user }) => {
           <div className="absolute right-0 mt-0 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
             <ul className="py-2">
               <li>
-                <span className="block px-4 py-2 font-bold">{`Welcome, ${user?.fname}`}</span>
+                <span className="block px-4 py-2 font-bold">
+                  {`Welcome, ${user?.fname || user?.name || user?.email?.split('@')[0] || 'User'}`}
+                </span>
               </li>
               <li>
                 <Link

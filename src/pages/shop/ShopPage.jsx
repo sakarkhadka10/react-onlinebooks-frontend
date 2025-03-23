@@ -94,17 +94,9 @@ const ShopPage = ({ items }) => {
       case "newest":
         return sortedData.sort((a, b) => b._id - a._id);
       case "price-low":
-        return sortedData.sort(
-          (a, b) =>
-            parseFloat(a.price.replace("$", "")) -
-            parseFloat(b.price.replace("$", ""))
-        );
+        return sortedData.sort((a, b) => a.price - b.price);
       case "price-high":
-        return sortedData.sort(
-          (a, b) =>
-            parseFloat(b.price.replace("$", "")) -
-            parseFloat(a.price.replace("$", ""))
-        );
+        return sortedData.sort((a, b) => b.price - a.price);
       case "rating":
         return sortedData.sort((a, b) => b.rating - a.rating);
       default:
@@ -339,6 +331,7 @@ const ShopPage = ({ items }) => {
                     price={book?.price}
                     rating={book?.rating}
                     discount={book?.discount}
+                    category={book?.category}
                   />
                 ))}
               </div>

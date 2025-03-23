@@ -87,8 +87,8 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="container  mx-auto px-4 py-8">
+      <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="md:flex">
           {/* Book Image */}
           <div className="md:w-1/3 p-6">
@@ -113,7 +113,11 @@ const ProductDetails = () => {
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
               {book.title}
             </h1>
-            <p className="text-gray-600 text-lg mb-4">By {book.author}</p>
+            <p className="text-gray-600 text-lg mb-2">By {book.author}</p>
+            <p className="font-semibold text-lg mb-4">
+              Category:{" "}
+              <span className="font-bold text-xl">{book.category}</span>
+            </p>
 
             <div className="flex items-center mb-4">
               <div className="flex mr-2">{renderStars(book.rating)}</div>
@@ -123,9 +127,9 @@ const ProductDetails = () => {
             <div className="flex items-center space-x-3 mb-6">
               <span className="text-3xl font-bold text-blue-600">
                 {book.discount > 0 ? (
-                  <span>${(book.price - discountPrice).toFixed(2)}</span>
+                  <span>Rs. {(book.price - discountPrice).toFixed(2)}</span>
                 ) : (
-                  book.price
+                  <span>Rs. {book.price}</span>
                 )}
               </span>
               <sup className=" text-lg font-bold text-gray-500 line-through">
@@ -133,22 +137,11 @@ const ProductDetails = () => {
               </sup>
             </div>
 
-            <div className="prose max-w-none mb-6">
-              <p className="text-gray-700">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </p>
-              <p className="text-gray-700 mt-4">
-                Duis aute irure dolor in reprehenderit in voluptate velit esse
-                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.
-              </p>
+            <div className="prose max-w-none mb-14">
+              <p className="text-gray-700">{book.description}</p>
             </div>
 
-            <div className="px-4 pb-4 mt-8">
+            <div className="px-4 pb-4 mt-8 absolute bottom-0">
               {isInCart ? (
                 <button
                   onClick={handleRemoveFromCart}

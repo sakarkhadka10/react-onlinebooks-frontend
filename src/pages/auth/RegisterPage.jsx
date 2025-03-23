@@ -6,7 +6,8 @@ const RegisterPage = () => {
   const registerApi = `${import.meta.env.VITE_SECRET_KEY_URI}/auth/register`;
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [credentials, setcredentials] = useState({
+  const [error, setError] = useState(""); // Added error state
+  const [credentials, setCredentials] = useState({
     fname: "",
     lname: "",
     email: "",
@@ -19,11 +20,14 @@ const RegisterPage = () => {
     console.log("Form submission triggered");
     const { fname, lname, email, password, confirmPassword } = credentials;
 
-    //Check If Password & Confirm Password Match Or Not
+    // Check if Password & Confirm Password match
     if (password !== confirmPassword) {
-      console.log("Password Do not match");
+      setError("Password and Confirm Password do not match");
       return;
     }
+
+    // Clear error if passwords match
+    setError("");
 
     const response = await fetch(registerApi, {
       method: "POST",
@@ -50,7 +54,11 @@ const RegisterPage = () => {
   };
 
   const changeHandler = (e) => {
-    setcredentials({ ...credentials, [e.target.name]: e.target.value });
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    // Clear error when user starts typing again
+    if (error) {
+      setError("");
+    }
   };
 
   return (
@@ -109,7 +117,7 @@ const RegisterPage = () => {
 
               {/* Password */}
               <div className="relative">
-                <label className="block text-gray-700 font-medium mb-2 ">
+                <label className="block text-gray-700 font-medium mb-2">
                   Password
                 </label>
                 <input
@@ -149,6 +157,10 @@ const RegisterPage = () => {
                   {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </button>
               </div>
+              {/* Error Message */}
+              {error && (
+                <div className="text-red-500 text-sm text-center">{error}</div>
+              )}
               {/* Submit Button */}
               <div>
                 <button
@@ -162,7 +174,6 @@ const RegisterPage = () => {
             <p className="text-center pt-2">
               Already A Registered User{" "}
               <Link to="/login" className="text-[#2563eb] font-extrabold">
-                {" "}
                 Login
               </Link>
             </p>

@@ -18,7 +18,6 @@ const OrdersPage = () => {
     data: orders = [],
     isLoading,
     isError,
-    error,
     refetch,
   } = useFetchUserOrdersQuery();
 
@@ -31,9 +30,9 @@ const OrdersPage = () => {
   };
 
   const handleImageError = (itemId) => {
-    setImageErrors(prev => ({
+    setImageErrors((prev) => ({
       ...prev,
-      [itemId]: true
+      [itemId]: true,
     }));
   };
 
@@ -46,8 +45,8 @@ const OrdersPage = () => {
   }
 
   if (isError) {
-    const errorMessage = error?.data?.message || "Failed to fetch your orders";
-    toast.error(errorMessage);
+    const errorMessage = "Failed to fetch your orders";
+    toast.error("Failed to fetch your orders");
 
     return (
       <div className="min-h-screen p-6 flex items-center justify-center">
@@ -216,5 +215,3 @@ const OrdersPage = () => {
 };
 
 export default OrdersPage;
-
-

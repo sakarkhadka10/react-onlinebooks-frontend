@@ -53,6 +53,14 @@ const BooksCards = (book) => {
             alt={book?.title}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
           />
+          {/* Discount Badge */}
+          {book.category && (
+            <div className="absolute top-2 left-2">
+              <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-semibold">
+                {book?.category}
+              </span>
+            </div>
+          )}
 
           {/* Discount Badge */}
           {book?.discount > 0 && (
@@ -80,11 +88,10 @@ const BooksCards = (book) => {
           <div className="flex justify-between items-center">
             <div className=" flex items-center space-x-2">
               <span className="text-2xl font-bold text-blue-600">
-                Rs.{" "}
                 {book.discount > 0 ? (
-                  <span>{(book.price - discountPrice).toFixed(2)}</span>
+                  <span>Rs. {(book.price - discountPrice).toFixed(2)}</span>
                 ) : (
-                  book.price
+                  <span>Rs. {book.price}</span>
                 )}
               </span>
               <sup className=" text-lg font-bold text-gray-500 line-through">

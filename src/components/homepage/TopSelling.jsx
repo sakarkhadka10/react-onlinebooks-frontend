@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import BooksCards from "../ui/BooksCards";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
+import { Link } from "react-router-dom";
 
 const TopSelling = () => {
   const { data: books = [] } = useFetchAllBooksQuery();
@@ -33,7 +34,9 @@ const TopSelling = () => {
             <h1 className="text-2xl font-bold">Top Selling Books</h1>
           </div>
           <div>
-            <button className="btn-dark">View All</button>
+            <Link to="/shop">
+              <button className="btn-dark">View All</button>
+            </Link>
           </div>
         </header>
         <main className="mt-6">
@@ -73,6 +76,7 @@ const TopSelling = () => {
                   price={book.price}
                   rating={book.rating}
                   discount={book.discount}
+                  category={book.category}
                 />
               ))}
             </div>

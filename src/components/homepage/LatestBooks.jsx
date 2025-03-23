@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import BooksCards from "../ui/BooksCards";
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
+import { Link } from "react-router-dom";
 
 const LatestBooks = () => {
   const { data: books = [] } = useFetchAllBooksQuery();
@@ -16,7 +17,9 @@ const LatestBooks = () => {
           <h1 className="text-2xl font-bold">Latest Books</h1>
         </div>
         <div>
-          <button className="btn-dark">View All</button>
+          <Link to="/shop">
+            <button className="btn-dark">View All</button>
+          </Link>
         </div>
       </header>
       <main className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 place-items-center gap-6">
@@ -30,6 +33,7 @@ const LatestBooks = () => {
             price={book.price}
             rating={book.rating}
             discount={book.discount}
+            category={book.category}
           />
         ))}
       </main>

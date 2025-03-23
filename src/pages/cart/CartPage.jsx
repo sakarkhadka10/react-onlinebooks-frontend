@@ -7,6 +7,7 @@ import {
 import { FaTrash, FaArrowLeft, FaCreditCard, FaPaypal } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { createSlug } from "../../utils/helpers";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -107,9 +108,7 @@ const CartPage = () => {
                     <div className="sm:w-3/4 flex flex-col justify-between">
                       <div>
                         <Link
-                          to={`/shop/${item.title
-                            .toLowerCase()
-                            .replace(/\s+/g, "-")}`}
+                          to={`/shop/${item._id}/${createSlug(item.title)}`}
                         >
                           <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800 transition-colors">
                             {item.title}
@@ -198,24 +197,51 @@ const CartPage = () => {
                 <h2 className="text-xl font-semibold">Order Summary</h2>
               </div>
 
-              <div className="p-4 space-y-4">
-                <div className=" pt-4 flex justify-between font-bold text-lg">
-                  <span>Total</span>
-                  <span>${subtotal.toFixed(2)}</span>
+              <div className="p-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Subtotal</span>
+                    <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Shipping</span>
+                    <span className="font-semibold">$0.00</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Tax</span>
+                    <span className="font-semibold">$0.00</span>
+                  </div>
+                  <div className="border-t pt-3 mt-3">
+                    <div className="flex justify-between">
+                      <span className="text-lg font-bold">Total</span>
+                      <span className="text-lg font-bold text-blue-600">
+                        ${subtotal.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="pt-4">
+                <div className="mt-6">
                   <button
                     onClick={handleCheckout}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 active:scale-95 transition-all"
                   >
                     Proceed to Checkout
                   </button>
                 </div>
 
-                <div className="flex justify-center space-x-4 pt-2">
-                  <FaCreditCard className="text-gray-400" />
-                  <FaPaypal className="text-gray-400" />
+                <div className="mt-4">
+                  <div className="text-center text-gray-600 mb-2">
+                    or checkout with
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button className="flex items-center justify-center bg-gray-100 py-2 rounded-lg hover:bg-gray-200">
+                      <FaCreditCard className="mr-2" /> Card
+                    </button>
+                    <button className="flex items-center justify-center bg-blue-100 text-blue-800 py-2 rounded-lg hover:bg-blue-200">
+                      <FaPaypal className="mr-2" /> PayPal
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

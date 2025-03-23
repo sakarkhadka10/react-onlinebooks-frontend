@@ -9,6 +9,12 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import CheckOutPage from "../pages/checkout/CheckOutPage";
 import PrivateRoute from "./PrivateRoute";
 import OrdersPage from "../pages/orders/OrdersPage";
+import AdminRoute from "./AdminRoute";
+import DashboardLayout from "../pages/AdminDashboard/DashboardLayout";
+import AdminHome from "../pages/AdminDashboard/AdminHome";
+import AddBook from "../pages/AdminDashboard/AddBook";
+import ManageBooks from "../pages/AdminDashboard/ManageBooks";
+import EditBook from "../pages/AdminDashboard/EditBook";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +43,35 @@ const router = createBrowserRouter([
             <CheckOutPage />
           </PrivateRoute>
         ),
+      },
+    ],
+  },
+
+  {
+    path: "/admin",
+    element: (
+      <AdminRoute>
+        <DashboardLayout />
+      </AdminRoute>
+    ),
+    children: [
+      {
+        path: "",
+        element: <AdminHome />,
+      },
+      {
+        path: "add-book",
+        element: <AddBook />,
+      },
+
+      {
+        path: "edit-book/:id",
+        element: <EditBook />,
+      },
+
+      {
+        path: "manage-books",
+        element: <ManageBooks />,
       },
     ],
   },
