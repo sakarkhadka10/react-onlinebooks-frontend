@@ -133,7 +133,7 @@ const OrdersPage = () => {
               </div>
               <div className="text-right">
                 <div className="text-lg font-bold">
-                  ${order.totalAmount.toFixed(2)}
+                  Rs. {order.totalAmount.toFixed(2)}
                 </div>
                 <span
                   className={`inline-block px-2 py-1 text-xs rounded-full ${
@@ -174,7 +174,7 @@ const OrdersPage = () => {
                           <h4 className="font-medium">{item.title}</h4>
                           <div className="flex justify-between text-sm text-gray-500">
                             <span>Qty: {item.quantity}</span>
-                            <span>${item.price.toFixed(2)}</span>
+                            <span>Rs. {item.price.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>

@@ -436,7 +436,7 @@ const CheckOutPage = () => {
                         Qty: {item.quantity || 1}
                       </p>
                       <p className="text-sm font-medium">
-                        ${item.newPrice.toFixed(2)}
+                        Rs. {item.newPrice.toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -446,21 +446,16 @@ const CheckOutPage = () => {
               <div className="space-y-2 pt-4 border-t">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>Rs. {subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping</span>
-                  <span>
-                    {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
-                  </span>
+                  <span>Free</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tax</span>
-                  <span>${tax.toFixed(2)}</span>
-                </div>
+
                 <div className="flex justify-between font-semibold text-base pt-2 border-t">
                   <span>Total</span>
-                  <span>${totalPrice}</span>
+                  <span>Rs. {totalPrice}</span>
                 </div>
               </div>
             </div>

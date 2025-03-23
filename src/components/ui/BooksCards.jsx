@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaShoppingCart, FaStar } from "react-icons/fa";
 import { createSlug } from "../../utils/helpers";
+import toast from "react-hot-toast";
 
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../../redux/features/cart/cartSlice";
@@ -10,8 +11,16 @@ const BooksCards = (book) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const isInCart = cartItems.some((items) => items._id === book._id);
+  const currentQuantityInCart =
+    cartItems.find((item) => item._id === book._id)?.quantity || 0;
 
   const handleAddToCart = () => {
+    // Check if adding to cart would exceed stock
+    if (currentQuantityInCart >= book.stock) {
+      toast.error(`Sorry, only ${book.stock} items available in stock`);
+      return;
+    }
+
     // Calculate newPrice based on price and discount
     const price = book.price;
     const discount = book.discount || 0;
@@ -105,23 +114,35 @@ const BooksCards = (book) => {
 
       {/* Add to Cart Button */}
       <div className="px-4 pb-4">
-        {isInCart ? (
-          <button
-            onClick={() => handleRemoveFromCart()}
-            className="w-full cursor-pointer bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2 "
-          >
-            <FaShoppingCart className="text-lg" />
-            <span>Remove From Cart</span>
-          </button>
-        ) : (
-          <button
-            onClick={() => handleAddToCart()}
-            className="w-full cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2 "
-          >
-            <FaShoppingCart className="text-lg" />
-            <span>Add to Cart</span>
-          </button>
+        {book.stock <= 0 && (
+          <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+            Out of Stock
+          </span>
         )}
+
+        {book.stock > 0 && book.stock <= 5 && (
+          <span className="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">
+            Low Stock
+          </span>
+        )}
+
+        <button
+          onClick={isInCart ? handleRemoveFromCart : handleAddToCart}
+          disabled={!isInCart && book.stock <= 0}
+          className={`${
+            !isInCart && book.stock <= 0
+              ? "bg-gray-400 cursor-not-allowed"
+              : isInCart
+              ? "bg-red-500 hover:bg-red-600"
+              : "bg-blue-500 hover:bg-blue-600"
+          } text-white px-3 py-1 rounded-md text-sm transition-colors duration-200`}
+        >
+          {isInCart
+            ? "Remove"
+            : book.stock <= 0
+            ? "Out of Stock"
+            : "Add to Cart"}
+        </button>
       </div>
     </div>
   );

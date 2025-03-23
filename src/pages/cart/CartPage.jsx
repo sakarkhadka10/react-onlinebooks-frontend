@@ -8,15 +8,24 @@ import { FaTrash, FaArrowLeft, FaCreditCard, FaPaypal } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { createSlug } from "../../utils/helpers";
+import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const { data: books } = useFetchAllBooksQuery();
+
+  // Get current stock for each book in cart
+  const getBookStock = (bookId) => {
+    if (!books) return 0;
+    const book = books.find((book) => book._id === bookId);
+    return book ? book.stock : 0;
+  };
 
   // Calculate cart totals
   const subtotal = cartItems.reduce((total, item) => {
-    return total + (item.newPrice || 0);
+    return total + item.newPrice * (item.quantity || 1);
   }, 0);
 
   const handleRemoveItem = (itemId) => {
@@ -30,11 +39,31 @@ const CartPage = () => {
   };
 
   const handleCheckout = () => {
+    // Check if any item exceeds available stock
+    const invalidItems = cartItems.filter(
+      (item) => (item.quantity || 1) > getBookStock(item._id)
+    );
+
+    if (invalidItems.length > 0) {
+      toast.error(
+        "Some items exceed available stock. Please adjust quantities."
+      );
+      return;
+    }
+
     navigate("/checkout");
   };
 
   const handleQuantityChange = (id, newQuantity) => {
     if (newQuantity < 1) return;
+
+    const availableStock = getBookStock(id);
+
+    if (newQuantity > availableStock) {
+      toast.error(`Only ${availableStock} items available in stock`);
+      return;
+    }
+
     dispatch(updateQuantity({ id, quantity: newQuantity }));
   };
 
@@ -90,94 +119,131 @@ const CartPage = () => {
               </div>
 
               <div className="divide-y">
-                {cartItems.map((item) => (
-                  <div
-                    key={item._id}
-                    className="p-4 flex flex-col sm:flex-row gap-4 animate-fadeIn"
-                  >
-                    <div className="sm:w-1/4">
-                      <div className="bg-gray-100 rounded-lg overflow-hidden h-40 flex items-center justify-center">
-                        <img
-                          src={item.coverImage}
-                          alt={item.title}
-                          className="h-full object-contain p-2 hover:scale-105 transition-transform duration-200"
-                        />
-                      </div>
-                    </div>
+                {cartItems.map((item) => {
+                  const availableStock = getBookStock(item._id);
+                  const isStockLow = availableStock <= 5 && availableStock > 0;
+                  const isOutOfStock = availableStock === 0;
 
-                    <div className="sm:w-3/4 flex flex-col justify-between">
-                      <div>
-                        <Link
-                          to={`/shop/${item._id}/${createSlug(item.title)}`}
-                        >
-                          <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800 transition-colors">
-                            {item.title}
-                          </h3>
-                        </Link>
-                        <p className="text-gray-600 text-sm">
-                          By {item.author}
-                        </p>
-
-                        {item.discount > 0 && (
-                          <div className="mt-1">
-                            <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded">
-                              {item.discount}% OFF
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex justify-between items-end mt-4">
-                        <div className="flex items-center">
-                          <div className="flex border rounded overflow-hidden">
-                            <button
-                              className="px-3 py-1 bg-gray-100 hover:bg-gray-200"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  item._id,
-                                  (item.quantity || 1) - 1
-                                )
-                              }
-                            >
-                              -
-                            </button>
-                            <span className="px-4 py-1 border-x">
-                              {item.quantity || 1}
-                            </span>
-                            <button
-                              className="px-3 py-1 bg-gray-100 hover:bg-gray-200"
-                              onClick={() =>
-                                handleQuantityChange(
-                                  item._id,
-                                  (item.quantity || 1) + 1
-                                )
-                              }
-                            >
-                              +
-                            </button>
-                          </div>
+                  return (
+                    <div
+                      key={item._id}
+                      className="p-4 flex flex-col sm:flex-row gap-4 animate-fadeIn"
+                    >
+                      <div className="sm:w-1/4">
+                        <div className="bg-gray-100 rounded-lg overflow-hidden h-40 flex items-center justify-center">
+                          <img
+                            src={item.coverImage}
+                            alt={item.title}
+                            className="h-full object-contain p-2 hover:scale-105 transition-transform duration-200"
+                          />
                         </div>
+                      </div>
 
-                        <div className="flex items-center gap-4">
-                          <span className="font-bold text-lg">
-                            $
-                            {item.newPrice
-                              ? item.newPrice.toFixed(2)
-                              : parseFloat(item.price.replace("$", "")).toFixed(
-                                  2
-                                )}
-                          </span>
-                          <button
-                            onClick={() => handleRemoveItem(item._id)}
-                            className="text-red-500 hover:text-red-700 hover:scale-110 active:scale-90 transition-transform"
+                      <div className="sm:w-3/4 flex flex-col justify-between">
+                        <div>
+                          <Link
+                            to={`/shop/${item._id}/${createSlug(item.title)}`}
                           >
-                            <FaTrash />
-                          </button>
+                            <h3 className="text-lg font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                              {item.title}
+                            </h3>
+                          </Link>
+                          <p className="text-gray-600 text-sm">
+                            By {item.author}
+                          </p>
+
+                          {item.discount > 0 && (
+                            <div className="mt-1">
+                              <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded">
+                                {item.discount}% OFF
+                              </span>
+                            </div>
+                          )}
+
+                          {/* Stock indicator */}
+                          <div className="mt-1">
+                            {isOutOfStock ? (
+                              <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded">
+                                Out of Stock
+                              </span>
+                            ) : isStockLow ? (
+                              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded">
+                                Only {availableStock} left
+                              </span>
+                            ) : (
+                              <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded">
+                                In Stock ({availableStock})
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between items-end mt-4">
+                          <div className="flex items-center">
+                            <div className="flex border rounded overflow-hidden">
+                              <button
+                                className={`px-3 py-1 bg-gray-100 hover:bg-gray-200 ${
+                                  (item.quantity || 1) <= 1
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    item._id,
+                                    (item.quantity || 1) - 1
+                                  )
+                                }
+                                disabled={(item.quantity || 1) <= 1}
+                              >
+                                -
+                              </button>
+                              <span className="px-4 py-1 border-x">
+                                {item.quantity || 1}
+                              </span>
+                              <button
+                                className={`px-3 py-1 bg-gray-100 hover:bg-gray-200 ${
+                                  (item.quantity || 1) >= availableStock ||
+                                  isOutOfStock
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : ""
+                                }`}
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    item._id,
+                                    (item.quantity || 1) + 1
+                                  )
+                                }
+                                disabled={
+                                  (item.quantity || 1) >= availableStock ||
+                                  isOutOfStock
+                                }
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-4">
+                            <span className="font-bold text-lg">
+                              Rs.{" "}
+                              {item.newPrice
+                                ? item.newPrice.toFixed(2)
+                                : parseFloat(
+                                    item.price.replace("Rs", "")
+                                  ).toFixed(2)}
+                            </span>
+                            <button
+                              onClick={() => handleRemoveItem(item._id)}
+                              className="text-red-500 hover:text-red-700 hover:scale-110 active:scale-90 transition-transform"
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="p-4 bg-gray-50 border-t">
@@ -199,23 +265,11 @@ const CartPage = () => {
 
               <div className="p-4">
                 <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-semibold">${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-semibold">$0.00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Tax</span>
-                    <span className="font-semibold">$0.00</span>
-                  </div>
-                  <div className="border-t pt-3 mt-3">
+                  <div className=" pt-3 mt-3">
                     <div className="flex justify-between">
                       <span className="text-lg font-bold">Total</span>
                       <span className="text-lg font-bold text-blue-600">
-                        ${subtotal.toFixed(2)}
+                        Rs. {subtotal.toFixed(2)}
                       </span>
                     </div>
                   </div>

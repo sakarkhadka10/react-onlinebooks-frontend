@@ -39,10 +39,12 @@ const cartSlice = createSlice({
       if (item) {
         item.quantity = quantity;
         // Update newPrice based on quantity
-        const price = parseFloat(item.price.replace("$", ""));
+        const price = typeof item.price === 'string' 
+          ? parseFloat(item.price.replace("$", "")) 
+          : item.price;
         const discount = item.discount || 0;
-        const singlePrice = price - (price * discount / 100);
-        item.newPrice = singlePrice * quantity;
+        const singleItemPrice = price - (price * discount / 100);
+        item.newPrice = singleItemPrice * quantity;
       }
     },
 
