@@ -94,7 +94,7 @@ const ProductDetails = () => {
           <div className="md:flex">
             {/* Book Image */}
             <div className="md:w-1/3 p-6">
-              <div className="relative overflow-hidden rounded-lg h-[400px]">
+              <div className="relative overflow-hidden rounded-lg h-full">
                 <img
                   src={book.coverImage}
                   alt={book.title}

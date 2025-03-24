@@ -52,14 +52,14 @@ const BooksCards = (book) => {
   const titleSlug = createSlug(book?.title);
 
   return (
-    <div className="flex-none w-[300px] bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">
+    <div className="flex-none w-[280px] bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">
       <Link to={`/shop/${titleSlug}`}>
         {/* Image Container */}
-        <div className="relative overflow-hidden group h-[200px]">
+        <div className="relative overflow-hidden group h-[280px]">
           <img
             src={book?.coverImage}
             alt={book?.title}
-            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-content transform group-hover:scale-105 transition-transform duration-300"
           />
           {/* Category Badge */}
           {book.category && (

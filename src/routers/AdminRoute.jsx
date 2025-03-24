@@ -10,7 +10,7 @@ const AdminRoute = ({ children }) => {
 
   //If usertype is "user then they will not allowed to access admin route"
   const usertype = localStorage.getItem("usertype");
-  
+
   if (usertype !== "admin") {
     return <Navigate to={"/"} />;
   }
