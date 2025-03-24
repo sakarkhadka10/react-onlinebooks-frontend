@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 
 const AuthProvider = ({ children }) => {
+  const getUser = import.meta.env.VITE_SECRET_KEY_URI;
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
@@ -10,7 +11,7 @@ const AuthProvider = ({ children }) => {
   const fetchUserDetails = async (token) => {
     setIsAuthLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/api/auth/getuser", {
+      const response = await fetch(`${getUser}/auth/getuser`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -54,9 +54,15 @@ const NavBar = () => {
             <img src="/logo.png" alt="logo" />
           </Link>
 
-          <div className="text-2xl">
-            <FaCircleUser />
-          </div>
+          {isLoggedIn ? (
+            <LoginProfile handleLogout={handleLogout} user={user} />
+          ) : (
+            <Link to="/login">
+              <button className="bg-amber-100 px-4 py-2 rounded-lg cursor-pointer font-bold">
+                <span>Account</span>
+              </button>
+            </Link>
+          )}
         </nav>
 
         {/* Mobile Side Panel For Menu */}
@@ -75,7 +81,7 @@ const NavBar = () => {
             <div className="flex justify-between items-center ">
               <div>
                 <Link to="/">
-                  <img src="/logo-dark.webp" alt="logo" />
+                  <img src="/logo.png" alt="logo" />
                 </Link>
               </div>
               <div className="text-2xl">
