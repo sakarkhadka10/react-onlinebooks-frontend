@@ -16,6 +16,8 @@ import AddBook from "../pages/AdminDashboard/AddBook";
 import ManageBooks from "../pages/AdminDashboard/ManageBooks";
 import EditBook from "../pages/AdminDashboard/EditBook";
 import UsersProfile from "../pages/users/UsersProfile";
+import AboutPage from "../pages/AboutUs/AboutUs";
+import ContactPage from "../pages/ContactUs/ContactPage";
 
 const router = createBrowserRouter([
   {
@@ -33,10 +35,11 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      { path: "/about", element: <div>About</div> },
       { path: "/cart", element: <CartPage /> },
       { path: "/login", element: <LoginPage /> },
       { path: "/register", element: <RegisterPage /> },
+      { path: "/about", element: <AboutPage /> },
+      { path: "/contact", element: <ContactPage /> },
       {
         path: "/checkout",
         element: (

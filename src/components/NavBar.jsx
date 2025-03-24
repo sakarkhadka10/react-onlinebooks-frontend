@@ -17,6 +17,7 @@ const NavBar = () => {
     { name: "Orders", path: "/orders" },
     { name: "About", path: "/about" },
     { name: "Shop", path: "/shop" },
+    { name: "Contact", path: "/contact" },
   ];
   const [navOpen, setNavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
