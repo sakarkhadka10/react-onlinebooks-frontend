@@ -1,12 +1,13 @@
 import { useContext } from "react";
 import { AuthContext } from "../../context/Auth/AuthContext";
-import { AnimatedButton } from "../../components/ui/AnimatedButton";
+import AnimatedButton from "../../components/ui/AnimatedButton";
 
 const UsersProfile = () => {
   const authCtx = useContext(AuthContext);
   const { user } = authCtx;
   return (
     <>
+      <title>{user?.name} - Super Books</title>
       <div className="w-full bg-gray-100">
         <div className=" p-4 bg-gradient-to-r from-yellow-300 to-yellow-100">
           <h2 className="text-2xl text-center font-bold text-gray-800">
@@ -24,7 +25,9 @@ const UsersProfile = () => {
             className="w-32 h-32 rounded-full"
           />
           <div>
-            <h2 className="text-3xl font-bold ">{user?.name}</h2>
+            <h2 className="text-3xl font-bold ">
+              {user?.fname} {user?.lname}
+            </h2>
             <p className="text-gray-800">{user?.date}</p>
             <p className="text-gray-800">
               {user?.email}{" "}

@@ -14,11 +14,10 @@ const cartSlice = createSlice({
         (item) => item._id === action.payload._id
       );
       if (!existingItem) {
-        // Use the newPrice that was calculated in the component
         state.cartItems.push({
           ...action.payload,
           quantity: 1,
-          newPrice: action.payload.newPrice || action.payload.price
+          newPrice: action.payload.newPrice || action.payload.price,
         });
         toast.success("Added To Cart");
       }
@@ -35,15 +34,12 @@ const cartSlice = createSlice({
     // Update quantity
     updateQuantity: (state, action) => {
       const { id, quantity } = action.payload;
-      const item = state.cartItems.find(item => item._id === id);
+      const item = state.cartItems.find((item) => item._id === id);
       if (item) {
         item.quantity = quantity;
-        // Update newPrice based on quantity
-        const price = typeof item.price === 'string' 
-          ? parseFloat(item.price.replace("$", "")) 
-          : item.price;
+        const price = item.price;
         const discount = item.discount || 0;
-        const singleItemPrice = price - (price * discount / 100);
+        const singleItemPrice = price - (price * discount) / 100;
         item.newPrice = singleItemPrice * quantity;
       }
     },
@@ -55,8 +51,6 @@ const cartSlice = createSlice({
   },
 });
 
-// Export the actions
-export const { addToCart, removeFromCart, clearCart, updateQuantity } = cartSlice.actions;
-
-// Export the reducer
+export const { addToCart, removeFromCart, clearCart, updateQuantity } =
+  cartSlice.actions;
 export default cartSlice.reducer;

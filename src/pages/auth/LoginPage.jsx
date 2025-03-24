@@ -44,7 +44,7 @@ const LoginPage = () => {
       if (response.ok && data.authToken) {
         await login(data.authToken); // Call context login
         const usertype = data.user.usertype;
-        
+
         // If they were redirected from a protected route, send them back there
         // Otherwise, redirect based on user type
         if (from !== "/") {
@@ -68,6 +68,7 @@ const LoginPage = () => {
 
   return (
     <>
+      <title>Login - Super Books</title>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="w-full md:w-1/2">

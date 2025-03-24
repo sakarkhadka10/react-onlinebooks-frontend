@@ -5,14 +5,24 @@ import {
   useUpdateBookMutation,
 } from "../../redux/features/books/booksApi";
 import { toast } from "react-hot-toast";
+import {
+  FaBook,
+  FaArrowLeft,
+  FaSave,
+  FaUpload,
+  FaSpinner,
+} from "react-icons/fa";
 import Loading from "../../components/ui/Loading";
-import { FaArrowLeft, FaBook, FaSave } from "react-icons/fa";
+import axios from "axios";
 
 const EditBook = () => {
+  const imageAPI = import.meta.env.VITE_SECRET_KEY_URI;
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: book, isLoading } = useFetchBookByIdQuery(id);
   const [updateBook, { isLoading: isUpdating }] = useUpdateBookMutation();
+  const [uploading, setUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     author: "",
@@ -42,6 +52,10 @@ const EditBook = () => {
         topselling: book.topselling || false,
         isfeature: book.isfeature || false,
       });
+
+      if (book.coverImage) {
+        setImagePreview(book.coverImage);
+      }
     }
   }, [book]);
 
@@ -52,15 +66,59 @@ const EditBook = () => {
       [name]:
         type === "checkbox"
           ? checked
-          : name === "price" ||
+          : type === "number" ||
+            name === "price" ||
             name === "stock" ||
-            name === "rating" ||
-            name === "discount"
+            name === "discount" ||
+            name === "rating"
           ? value === ""
             ? ""
             : Number(value)
           : value,
     });
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file type
+    const fileType = file.type.split("/")[0];
+    if (fileType !== "image") {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to cloudinary
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await axios.post(`${imageAPI}/upload/image`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        coverImage: response.data.url,
+      }));
+      toast.success("Image uploaded successfully");
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -206,23 +264,51 @@ const EditBook = () => {
             />
           </div>
 
-          {/* Cover Image */}
+          {/* Cover Image Upload */}
           <div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="coverImage"
             >
-              Cover Image URL *
+              Cover Image *
             </label>
-            <input
-              type="text"
-              id="coverImage"
-              name="coverImage"
-              value={formData.coverImage}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center space-x-2">
+                <label className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded flex items-center">
+                  <FaUpload className="mr-2" />
+                  {uploading ? "Uploading..." : "Upload Image"}
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleImageUpload}
+                    accept="image/*"
+                    disabled={uploading}
+                  />
+                </label>
+                {uploading && (
+                  <FaSpinner className="animate-spin text-blue-500" />
+                )}
+              </div>
+
+              {imagePreview && (
+                <div className="mt-2">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-40 object-cover rounded border"
+                  />
+                </div>
+              )}
+
+              {formData.coverImage && (
+                <input
+                  type="text"
+                  value={formData.coverImage}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-100"
+                  readOnly
+                />
+              )}
+            </div>
           </div>
 
           {/* Discount */}

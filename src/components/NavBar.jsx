@@ -29,7 +29,6 @@ const NavBar = () => {
     logout(); // Use context logout
     navigate("/login");
   };
-  console.log(user);
 
   const handleSearch = (e) => {
     e.preventDefault();

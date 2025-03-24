@@ -39,7 +39,7 @@ const ShopPage = ({ items }) => {
 
       // Extract unique categories
       const uniqueCategories = [
-        ...new Set(allBooks.map((book) => book.category || "Uncategorized")),
+        ...new Set(allBooks.map((book) => book.category)),
       ];
       setCategories(uniqueCategories);
 
@@ -141,6 +141,7 @@ const ShopPage = ({ items }) => {
 
   return (
     <>
+      <title>Books - Super Books</title>
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-6 relative">
           {/* Filter Section - Mobile Toggle */}

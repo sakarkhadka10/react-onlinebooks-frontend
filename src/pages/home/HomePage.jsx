@@ -10,6 +10,8 @@ import MainAds from "../../components/homepage/MainAds";
 const HomePage = () => {
   return (
     <>
+      <title>Home - Super Books</title>
+
       <div>
         <HomeCarousel />
         <div className="hidden lg:block">

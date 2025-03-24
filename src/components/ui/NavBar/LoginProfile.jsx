@@ -29,7 +29,12 @@ const LoginProfile = ({ handleLogout, user }) => {
             <ul className="py-2">
               <li>
                 <span className="block px-4 py-2 font-bold">
-                  {`Welcome, ${user?.fname || user?.name || user?.email?.split('@')[0] || 'Admin'}`}
+                  {`Welcome, ${
+                    user?.fname ||
+                    user?.name ||
+                    user?.email?.split("@")[0] ||
+                    "Admin"
+                  }`}
                 </span>
               </li>
               {/* Show Administration only if usertype is "admin" */}
@@ -43,26 +48,19 @@ const LoginProfile = ({ handleLogout, user }) => {
               </li>
               <li>
                 <a
-                  href="/profile"
+                  href="/user-profile"
                   className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
                 >
                   <span className="mr-2">👤</span> Profile
                 </a>
               </li>
-              <li>
-                <a
-                  href="/transactions"
-                  className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
-                >
-                  <span className="mr-2">🛒</span> Transactions
-                </a>
-              </li>
+
               <li>
                 <a
                   href="/products"
                   className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
                 >
-                  <span className="mr-2">📦</span> Products
+                  <span className="mr-2">📦</span> Add Product
                 </a>
               </li>
 
@@ -84,12 +82,17 @@ const LoginProfile = ({ handleLogout, user }) => {
             <ul className="py-2">
               <li>
                 <span className="block px-4 py-2 font-bold">
-                  {`Welcome, ${user?.fname || user?.name || user?.email?.split('@')[0] || 'User'}`}
+                  {`Welcome, ${
+                    user?.fname ||
+                    user?.name ||
+                    user?.email?.split("@")[0] ||
+                    "User"
+                  }`}
                 </span>
               </li>
               <li>
                 <Link
-                  to={"/usersprofile"}
+                  to={"/user-profile"}
                   className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
                 >
                   <span className="mr-2">👤</span> Profile
@@ -102,23 +105,6 @@ const LoginProfile = ({ handleLogout, user }) => {
                 >
                   <span className="mr-2">🛒</span> Orders
                 </Link>
-              </li>
-
-              <li>
-                <a
-                  href="/invoice"
-                  className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
-                >
-                  <span className="mr-2">📦</span> Invoice
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/coupons"
-                  className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
-                >
-                  <span className="mr-2">📦</span> Coupons
-                </a>
               </li>
               <li>
                 <button

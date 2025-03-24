@@ -63,6 +63,7 @@ const RegisterPage = () => {
 
   return (
     <>
+      <title>SignUp - Super Books</title>
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Form Section */}

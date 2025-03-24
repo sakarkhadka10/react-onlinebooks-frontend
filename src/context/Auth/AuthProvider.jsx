@@ -18,11 +18,9 @@ const AuthProvider = ({ children }) => {
         },
       });
       const data = await response.json();
-      console.log("fetch user details response:", data);
       if (response.ok) {
         setUser(data);
         setIsLoggedIn(true);
-        console.log("User Authenticated:", { user: data, setIsLoggedIn: true });
       } else {
         localStorage.removeItem("token");
         setUser(null);
@@ -62,7 +60,9 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, isAuthLoading, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isLoggedIn, isAuthLoading, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

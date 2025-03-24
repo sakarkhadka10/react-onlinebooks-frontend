@@ -15,6 +15,7 @@ import AdminHome from "../pages/AdminDashboard/AdminHome";
 import AddBook from "../pages/AdminDashboard/AddBook";
 import ManageBooks from "../pages/AdminDashboard/ManageBooks";
 import EditBook from "../pages/AdminDashboard/EditBook";
+import UsersProfile from "../pages/users/UsersProfile";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <CheckOutPage />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/user-profile",
+        element: (
+          <PrivateRoute>
+            <UsersProfile />{" "}
           </PrivateRoute>
         ),
       },

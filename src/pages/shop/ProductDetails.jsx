@@ -87,89 +87,92 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="container  mx-auto px-4 py-8">
-      <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="md:flex">
-          {/* Book Image */}
-          <div className="md:w-1/3 p-6">
-            <div className="relative overflow-hidden rounded-lg h-[400px]">
-              <img
-                src={book.coverImage}
-                alt={book.title}
-                className="w-full h-full object-cover"
-              />
-              {book.discount > 0 && (
-                <div className="absolute top-4 right-4">
-                  <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    {book.discount}% OFF
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Book Details */}
-          <div className="md:w-2/3 p-6">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              {book.title}
-            </h1>
-            <p className="text-gray-600 text-lg mb-2">By {book.author}</p>
-            <p className="font-semibold text-lg mb-4">
-              Category:{" "}
-              <span className="font-bold text-xl">{book.category}</span>
-            </p>
-
-            <div className="flex items-center mb-4">
-              <div className="flex mr-2">{renderStars(book.rating)}</div>
-              <span className="text-gray-600">({book.rating} rating)</span>
-            </div>
-
-            <div className="flex items-center space-x-3 mb-6">
-              <span className="text-3xl font-bold text-blue-600">
-                {book.discount > 0 ? (
-                  <span>Rs. {(book.price - discountPrice).toFixed(2)}</span>
-                ) : (
-                  <span>Rs. {book.price}</span>
-                )}
-              </span>
-              <sup className=" text-lg font-bold text-gray-500 line-through">
-                {book.discount > 0 && book.price}
-              </sup>
-            </div>
-
-            <div className="prose max-w-none mb-14">
-              <p className="text-gray-700">{book.description}</p>
-            </div>
-            <div className="flex gap-4 items-center">
-              <div className="px-4 pb-4 mt-8 ">
-                {isInCart ? (
-                  <button
-                    onClick={handleRemoveFromCart}
-                    className="bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
-                  >
-                    <FaShoppingCart className="text-lg" />
-                    <span>Remove From Cart</span>
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleAddToCart}
-                    className="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
-                  >
-                    <FaShoppingCart className="text-lg" />
-                    <span>Add to Cart</span>
-                  </button>
+    <>
+      <title>{book.title} - Super Books</title>
+      <div className="container  mx-auto px-4 py-8">
+        <div className="relative bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="md:flex">
+            {/* Book Image */}
+            <div className="md:w-1/3 p-6">
+              <div className="relative overflow-hidden rounded-lg h-[400px]">
+                <img
+                  src={book.coverImage}
+                  alt={book.title}
+                  className="w-full h-full object-cover"
+                />
+                {book.discount > 0 && (
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      {book.discount}% OFF
+                    </span>
+                  </div>
                 )}
               </div>
-              <div>
-                <p className="text-green-500 text-sm font-semibold mt-2">
-                  Available Stock: {book.stock}
-                </p>
+            </div>
+
+            {/* Book Details */}
+            <div className="md:w-2/3 p-6">
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                {book.title}
+              </h1>
+              <p className="text-gray-600 text-lg mb-2">By {book.author}</p>
+              <p className="font-semibold text-lg mb-4">
+                Category:{" "}
+                <span className="font-bold text-xl">{book.category}</span>
+              </p>
+
+              <div className="flex items-center mb-4">
+                <div className="flex mr-2">{renderStars(book.rating)}</div>
+                <span className="text-gray-600">({book.rating} rating)</span>
+              </div>
+
+              <div className="flex items-center space-x-3 mb-6">
+                <span className="text-3xl font-bold text-blue-600">
+                  {book.discount > 0 ? (
+                    <span>Rs. {(book.price - discountPrice).toFixed(2)}</span>
+                  ) : (
+                    <span>Rs. {book.price}</span>
+                  )}
+                </span>
+                <sup className=" text-lg font-bold text-gray-500 line-through">
+                  {book.discount > 0 && book.price}
+                </sup>
+              </div>
+
+              <div className="prose max-w-none mb-14">
+                <p className="text-gray-700">{book.description}</p>
+              </div>
+              <div className="flex gap-4 items-center">
+                <div className="px-4 pb-4 mt-8 ">
+                  {isInCart ? (
+                    <button
+                      onClick={handleRemoveFromCart}
+                      className="bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                    >
+                      <FaShoppingCart className="text-lg" />
+                      <span>Remove From Cart</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleAddToCart}
+                      className="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold flex items-center justify-center space-x-2"
+                    >
+                      <FaShoppingCart className="text-lg" />
+                      <span>Add to Cart</span>
+                    </button>
+                  )}
+                </div>
+                <div>
+                  <p className="text-green-500 text-sm font-semibold mt-2">
+                    Available Stock: {book.stock}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
