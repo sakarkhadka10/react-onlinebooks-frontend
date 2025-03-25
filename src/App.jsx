@@ -4,8 +4,22 @@ import "./app.css";
 import Footer from "./components/Footer";
 import ScrollToTop from "./utils/ScrollToTop";
 import { Toaster } from "react-hot-toast";
+import { useEffect, useContext } from 'react';
+import { useDispatch } from 'react-redux';
+import { AuthContext } from './context/Auth/AuthContext';
+import { fetchCart } from './redux/features/cart/cartSlice';
 
 function App() {
+  const { isLoggedIn } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
+  // Load cart from backend when app initializes and user is logged in
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchCart());
+    }
+  }, [isLoggedIn, dispatch]);
+
   return (
     <>
       <div className="text-[var(--color-dark)] bg-[var(--color-light)]">
@@ -35,6 +49,3 @@ function App() {
 }
 
 export default App;
-
-
-

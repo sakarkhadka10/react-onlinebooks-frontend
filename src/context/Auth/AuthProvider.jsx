@@ -16,19 +16,22 @@ const AuthProvider = ({ children }) => {
         headers: {
           "Content-Type": "application/json",
           "auth-token": token,
+          Authorization: `Bearer ${token}`,
         },
       });
-      const data = await response.json();
-      if (response.ok) {
-        setUser(data);
-        setIsLoggedIn(true);
-      } else {
+
+      if (!response.ok) {
         localStorage.removeItem("token");
         setUser(null);
         setIsLoggedIn(false);
+        return;
       }
+
+      const data = await response.json();
+      setUser(data);
+      setIsLoggedIn(true);
     } catch (error) {
-      console.error("Error Fetching User:", error);
+      console.error("Error fetching user details:", error);
       localStorage.removeItem("token");
       setUser(null);
       setIsLoggedIn(false);

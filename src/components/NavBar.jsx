@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import {
   FaArrowRight,
   FaBars,
@@ -6,10 +6,11 @@ import {
   FaMagnifyingGlass,
   FaXmark,
 } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import LoginProfile from "./ui/NavBar/LoginProfile";
 import { AuthContext } from "../context/Auth/AuthContext";
+import { fetchCart } from "../redux/features/cart/cartSlice";
 
 const NavBar = () => {
   const navItems = [
@@ -22,6 +23,7 @@ const NavBar = () => {
   const [navOpen, setNavOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Auth For User Profile
   const authCtx = useContext(AuthContext);
@@ -30,6 +32,12 @@ const NavBar = () => {
     logout(); // Use context logout
     navigate("/login");
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchCart());
+    }
+  }, [isLoggedIn, dispatch]);
 
   const handleSearch = (e) => {
     e.preventDefault();

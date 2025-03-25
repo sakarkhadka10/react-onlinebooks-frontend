@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeFromCart,
   clearCart,
   updateQuantity,
+  syncCart,
 } from "../../redux/features/cart/cartSlice";
 import { FaTrash, FaArrowLeft, FaCreditCard, FaPaypal } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,7 +16,17 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const needsSync = useSelector((state) => state.cart.needsSync);
   const { data: books } = useFetchAllBooksQuery();
+  const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn) || 
+                     localStorage.getItem("token") !== null;
+
+  // Sync cart with backend when needed
+  useEffect(() => {
+    if (needsSync && isLoggedIn) {
+      dispatch(syncCart(cartItems));
+    }
+  }, [cartItems, needsSync, dispatch, isLoggedIn]);
 
   // Get current stock for each book in cart
   const getBookStock = (bookId) => {
@@ -29,8 +41,15 @@ const CartPage = () => {
   }, 0);
 
   const handleRemoveItem = (itemId) => {
-    const itemToRemove = { _id: itemId };
-    dispatch(removeFromCart(itemToRemove));
+    dispatch(removeFromCart({ _id: itemId }));
+    
+    // Force sync with backend if logged in
+    if (isLoggedIn) {
+      const updatedItems = cartItems.filter(item => item._id !== itemId);
+      setTimeout(() => {
+        dispatch(syncCart(updatedItems));
+      }, 100);
+    }
   };
 
   const handleClearCart = () => {

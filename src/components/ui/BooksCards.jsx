@@ -2,14 +2,29 @@ import { Link } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { createSlug } from "../../utils/helpers";
 import toast from "react-hot-toast";
+import { useContext } from "react";
+import { AuthContext } from "../../context/Auth/AuthContext";
 
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "../../redux/features/cart/cartSlice";
+import {
+  addToCart,
+  removeFromCart,
+  syncCart,
+} from "../../redux/features/cart/cartSlice";
+import { useEffect } from "react";
 
 const BooksCards = (book) => {
-  // Redux
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const { isLoggedIn } = useContext(AuthContext);
+
+  // After any cart operation, sync with backend if logged in
+  useEffect(() => {
+    if (isLoggedIn && cartItems.length > 0) {
+      dispatch(syncCart(cartItems));
+    }
+  }, [cartItems, isLoggedIn, dispatch]);
+
   const isInCart = cartItems.some((items) => items._id === book._id);
 
   const currentQuantityInCart =
@@ -32,10 +47,29 @@ const BooksCards = (book) => {
         newPrice,
       })
     );
+
+    // Force sync with backend if logged in
+    if (isLoggedIn) {
+      setTimeout(() => {
+        const updatedCartItems = [
+          ...cartItems,
+          { ...book, quantity: 1, newPrice },
+        ];
+        dispatch(syncCart(updatedCartItems));
+      }, 100);
+    }
   };
   const discountPrice = book ? book.price * (book.discount / 100) : 0;
   const handleRemoveFromCart = () => {
     dispatch(removeFromCart(book));
+    
+    // Force sync with backend if logged in
+    if (isLoggedIn) {
+      setTimeout(() => {
+        const updatedCartItems = cartItems.filter(item => item._id !== book._id);
+        dispatch(syncCart(updatedCartItems));
+      }, 100);
+    }
   };
 
   const renderStars = (rating) => {

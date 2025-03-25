@@ -6,6 +6,7 @@ import { clearCart } from "../../redux/features/cart/cartSlice";
 import { toast } from "react-hot-toast";
 import { FaMoneyBillWave, FaArrowLeft } from "react-icons/fa";
 import { useCreateOrderMutation } from "../../redux/features/orders/ordersApi";
+// import { useClearCartMutation } from "../../redux/features/cart/cartApi";
 
 const CheckOutPage = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
@@ -41,6 +42,7 @@ const CheckOutPage = () => {
   const [shippingInfo, setShippingInfo] = useState(null);
 
   const [createOrder, { isLoading: isSubmitting }] = useCreateOrderMutation();
+  // const [clearServerCart] = useClearCartMutation();
 
   const handleOrderComplete = async () => {
     if (!shippingInfo) {
@@ -83,6 +85,8 @@ const CheckOutPage = () => {
 
         // Clear cart
         dispatch(clearCart());
+
+        // Clear cart on server if user is logged in
 
         // Show success message
         toast.success("Order placed successfully!");
