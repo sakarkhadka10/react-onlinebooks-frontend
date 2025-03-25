@@ -107,6 +107,14 @@ const LoginProfile = ({ handleLogout, user }) => {
                 </Link>
               </li>
               <li>
+                <Link
+                  to={"/cart"}
+                  className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center"
+                >
+                  <span className="mr-2">🛒</span> Carts
+                </Link>
+              </li>
+              <li>
                 <button
                   onClick={handleLogout}
                   className=" px-4 py-2 text-gray-800 hover:bg-gray-100 flex items-center cursor-pointer"
