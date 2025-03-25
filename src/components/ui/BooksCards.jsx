@@ -11,19 +11,36 @@ import {
   removeFromCart,
   syncCart,
 } from "../../redux/features/cart/cartSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const BooksCards = (book) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const { isLoggedIn } = useContext(AuthContext);
+  const [syncTimeout, setSyncTimeout] = useState(null);
+  const [needsSync, setNeedsSync] = useState(false);
 
   // After any cart operation, sync with backend if logged in
   useEffect(() => {
-    if (isLoggedIn && cartItems.length > 0) {
-      dispatch(syncCart(cartItems));
+    // Only sync if logged in, there are items, and we haven't synced recently
+    if (isLoggedIn && cartItems.length > 0 && needsSync) {
+      // Clear any existing timeout
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
+      
+      // Set new timeout with longer delay
+      const timeoutId = setTimeout(() => {
+        dispatch(syncCart(cartItems));
+      }, 1000); // Increased to 1000ms
+      
+      setSyncTimeout(timeoutId);
+      
+      return () => {
+        if (timeoutId) clearTimeout(timeoutId);
+      };
     }
-  }, [cartItems, isLoggedIn, dispatch]);
+  }, [cartItems, needsSync, dispatch, isLoggedIn]);
 
   const isInCart = cartItems.some((items) => items._id === book._id);
 
@@ -40,6 +57,9 @@ const BooksCards = (book) => {
     const discount = book.discount || 0;
     const newPrice = price - (price * discount) / 100;
 
+    // Log the book being added to cart
+    console.log("Adding book to cart:", book);
+
     dispatch(
       addToCart({
         ...book,
@@ -47,29 +67,21 @@ const BooksCards = (book) => {
         newPrice,
       })
     );
-
-    // Force sync with backend if logged in
+    
+    toast.success("Book added to cart!");
+    
+    // Manually trigger sync if logged in
     if (isLoggedIn) {
-      setTimeout(() => {
-        const updatedCartItems = [
-          ...cartItems,
-          { ...book, quantity: 1, newPrice },
-        ];
-        dispatch(syncCart(updatedCartItems));
-      }, 100);
+      const updatedCartItems = [...cartItems, {...book, quantity: 1, newPrice}];
+      console.log("Manually syncing after add:", updatedCartItems);
+      dispatch(syncCart(updatedCartItems));
     }
   };
   const discountPrice = book ? book.price * (book.discount / 100) : 0;
   const handleRemoveFromCart = () => {
     dispatch(removeFromCart(book));
     
-    // Force sync with backend if logged in
-    if (isLoggedIn) {
-      setTimeout(() => {
-        const updatedCartItems = cartItems.filter(item => item._id !== book._id);
-        dispatch(syncCart(updatedCartItems));
-      }, 100);
-    }
+    // Remove the manual sync here - we'll use the effect above
   };
 
   const renderStars = (rating) => {
@@ -87,7 +99,7 @@ const BooksCards = (book) => {
 
   return (
     <div className="flex-none w-[280px] bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">
-      <Link to={`/shop/${titleSlug}`}>
+      <Link to={`/shop/${book._id}`}>
         {/* Image Container */}
         <div className="relative overflow-hidden group h-[280px]">
           <img

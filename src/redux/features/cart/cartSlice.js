@@ -5,10 +5,16 @@ import getbaseUrl from "../../../utils/baseUrl";
 // Async thunks for cart operations
 export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return { items: [] };
+      
+      // Check if we already have cart items to avoid unnecessary fetches
+      const { cart } = getState();
+      if (cart.cartItems.length > 0 && !cart.needsSync) {
+        return { items: cart.cartItems };
+      }
 
       const response = await fetch(`${getbaseUrl()}/api/cart`, {
         headers: {
@@ -25,7 +31,6 @@ export const fetchCart = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log("Cart fetched successfully:", data);
       return data;
     } catch (error) {
       console.error("Cart fetch exception:", error);
@@ -34,41 +39,48 @@ export const fetchCart = createAsyncThunk(
   }
 );
 
+// Optimize the syncCart function with debouncing
+let syncTimeout = null;
 export const syncCart = createAsyncThunk(
   "cart/syncCart",
-  async (cartItems, { rejectWithValue }) => {
+  async (cartItems, { rejectWithValue, dispatch }) => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) {
-        return { items: [] };
-      }
+      if (!token) return { items: cartItems };
 
-      // Ensure cartItems is an array
-      if (!Array.isArray(cartItems)) {
-        console.error("Invalid cartItems format:", cartItems);
-        return rejectWithValue("Invalid cart items format");
+      // Clear any existing timeout
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
       }
+      
+      // Set new timeout to debounce API calls
+      return new Promise((resolve) => {
+        syncTimeout = setTimeout(async () => {
+          try {
+            const response = await fetch(`${getbaseUrl()}/api/cart`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ items: cartItems }),
+              credentials: "include",
+            });
 
-      const response = await fetch(`${getbaseUrl()}/api/cart`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "auth-token": token,
-        },
-        body: JSON.stringify({ items: cartItems }),
-        credentials: "include",
+            if (!response.ok) {
+              const errorData = await response.json();
+              console.error("Cart sync error response:", errorData);
+              throw new Error(errorData.message || "Failed to sync cart");
+            }
+
+            const data = await response.json();
+            resolve(data);
+          } catch (error) {
+            console.error("Cart sync exception:", error);
+            resolve(rejectWithValue(error.message));
+          }
+        }, 500);
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Cart sync error:", errorData);
-        throw new Error(errorData.message || "Failed to sync cart");
-      }
-
-      const data = await response.json();
-      console.log("Cart sync successful:", data);
-      return data;
     } catch (error) {
       console.error("Cart sync exception:", error);
       return rejectWithValue(error.message);
@@ -87,20 +99,19 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const existingItem = state.cartItems.find(
-        (item) => item._id === action.payload._id
-      );
-      if (!existingItem) {
-        const newItem = {
-          ...action.payload,
-          quantity: 1,
-          newPrice: action.payload.newPrice || action.payload.price,
-        };
-        state.cartItems.push(newItem);
-        toast.success("Added To Cart");
+      const { _id } = action.payload;
+      const existingItem = state.cartItems.find((item) => item._id === _id);
 
-        // We'll handle the sync in the component
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        state.cartItems.push({ ...action.payload, quantity: 1 });
       }
+      
+      // Mark that we need to sync
+      state.needsSync = true;
+      
+      console.log("Cart after adding item:", state.cartItems);
     },
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(
@@ -127,6 +138,9 @@ const cartSlice = createSlice({
         const singleItemPrice = price - (price * discount) / 100;
         item.newPrice = singleItemPrice * quantity;
       }
+    },
+    setCartItems: (state, action) => {
+      state.cartItems = action.payload;
     },
     clearCart: (state) => {
       state.cartItems = [];
@@ -160,6 +174,8 @@ const cartSlice = createSlice({
       .addCase(syncCart.fulfilled, (state, action) => {
         if (action.payload && action.payload.items) {
           console.log("Cart synced successfully:", action.payload.items);
+          // Replace the entire cart with the server response
+          state.cartItems = action.payload.items;
         }
       })
       .addCase(syncCart.rejected, (state, action) => {
@@ -168,11 +184,5 @@ const cartSlice = createSlice({
   },
 });
 
-export const {
-  addToCart,
-  removeFromCart,
-  clearCart,
-  updateQuantity,
-  initializeCartFromBackend,
-} = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, clearCart, setCartItems, initializeCartFromBackend } = cartSlice.actions;
 export default cartSlice.reducer;

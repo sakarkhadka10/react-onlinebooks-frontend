@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeFromCart,
   clearCart,
   updateQuantity,
   syncCart,
+  fetchCart
 } from "../../redux/features/cart/cartSlice";
 import { FaTrash, FaArrowLeft, FaCreditCard, FaPaypal } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,11 +21,34 @@ const CartPage = () => {
   const { data: books } = useFetchAllBooksQuery();
   const isLoggedIn = useSelector((state) => state.auth?.isLoggedIn) || 
                      localStorage.getItem("token") !== null;
+  const [syncTimeout, setSyncTimeout] = useState(null);
 
-  // Sync cart with backend when needed
+  // Fetch cart on component mount if logged in
   useEffect(() => {
-    if (needsSync && isLoggedIn) {
-      dispatch(syncCart(cartItems));
+    if (isLoggedIn) {
+      dispatch(fetchCart());
+    }
+  }, [isLoggedIn, dispatch]);
+
+  // Optimize the useEffect for cart syncing
+  useEffect(() => {
+    // Only sync if logged in and there are actual changes
+    if (isLoggedIn && needsSync && cartItems.length > 0) {
+      // Clear any existing timeout
+      if (syncTimeout) {
+        clearTimeout(syncTimeout);
+      }
+      
+      // Set new timeout with longer delay to reduce API calls
+      const timeoutId = setTimeout(() => {
+        dispatch(syncCart(cartItems));
+      }, 1000); // Increased to 1000ms
+      
+      setSyncTimeout(timeoutId);
+      
+      return () => {
+        if (timeoutId) clearTimeout(timeoutId);
+      };
     }
   }, [cartItems, needsSync, dispatch, isLoggedIn]);
 
@@ -42,14 +66,7 @@ const CartPage = () => {
 
   const handleRemoveItem = (itemId) => {
     dispatch(removeFromCart({ _id: itemId }));
-    
-    // Force sync with backend if logged in
-    if (isLoggedIn) {
-      const updatedItems = cartItems.filter(item => item._id !== itemId);
-      setTimeout(() => {
-        dispatch(syncCart(updatedItems));
-      }, 100);
-    }
+    // Let the useEffect handle syncing
   };
 
   const handleClearCart = () => {

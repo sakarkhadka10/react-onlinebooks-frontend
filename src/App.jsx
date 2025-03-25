@@ -4,10 +4,17 @@ import "./app.css";
 import Footer from "./components/Footer";
 import ScrollToTop from "./utils/ScrollToTop";
 import { Toaster } from "react-hot-toast";
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, lazy, Suspense } from 'react';
 import { useDispatch } from 'react-redux';
 import { AuthContext } from './context/Auth/AuthContext';
 import { fetchCart } from './redux/features/cart/cartSlice';
+
+// Loading spinner component
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+  </div>
+);
 
 function App() {
   const { isLoggedIn } = useContext(AuthContext);
@@ -27,8 +34,10 @@ function App() {
         <nav>
           <NavBar />
         </nav>
-        <main className="min-h-screen max-h-screen-2xl mx-auto ">
-          <Outlet />
+        <main className="min-h-screen max-h-screen-2xl mx-auto">
+          <Suspense fallback={<LoadingSpinner />}>
+            <Outlet />
+          </Suspense>
         </main>
         <footer>
           <Footer />

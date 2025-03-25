@@ -3,7 +3,11 @@ import { useParams } from "react-router-dom";
 import { FaShoppingCart, FaStar } from "react-icons/fa";
 import { createSlug } from "../../utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart, syncCart } from "../../redux/features/cart/cartSlice";
+import {
+  addToCart,
+  removeFromCart,
+  syncCart,
+} from "../../redux/features/cart/cartSlice";
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -18,7 +22,10 @@ const ProductDetails = () => {
 
   useEffect(() => {
     if (books && books.length > 0) {
-      const foundBook = books.find((item) => item._id === id);
+      // Find the book by ID or by slug if ID is actually a slug
+      const foundBook = books.find(
+        (item) => item._id === id || createSlug(item.title) === id
+      );
       setBook(foundBook);
       setLoading(false);
     }
@@ -50,11 +57,13 @@ const ProductDetails = () => {
   const handleRemoveFromCart = () => {
     if (book) {
       dispatch(removeFromCart(book));
-      
+
       // Force sync with backend if logged in
       if (isLoggedIn) {
         setTimeout(() => {
-          const updatedCartItems = cartItems.filter(item => item._id !== book._id);
+          const updatedCartItems = cartItems.filter(
+            (item) => item._id !== book._id
+          );
           dispatch(syncCart(updatedCartItems));
         }, 100);
       }
