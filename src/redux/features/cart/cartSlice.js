@@ -9,7 +9,7 @@ export const fetchCart = createAsyncThunk(
     try {
       const token = localStorage.getItem("token");
       if (!token) return { items: [] };
-      
+
       // Check if we already have cart items to avoid unnecessary fetches
       const { cart } = getState();
       if (cart.cartItems.length > 0 && !cart.needsSync) {
@@ -43,7 +43,7 @@ export const fetchCart = createAsyncThunk(
 let syncTimeout = null;
 export const syncCart = createAsyncThunk(
   "cart/syncCart",
-  async (cartItems, { rejectWithValue, dispatch }) => {
+  async (cartItems, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return { items: cartItems };
@@ -52,7 +52,7 @@ export const syncCart = createAsyncThunk(
       if (syncTimeout) {
         clearTimeout(syncTimeout);
       }
-      
+
       // Set new timeout to debounce API calls
       return new Promise((resolve) => {
         syncTimeout = setTimeout(async () => {
@@ -107,10 +107,10 @@ const cartSlice = createSlice({
       } else {
         state.cartItems.push({ ...action.payload, quantity: 1 });
       }
-      
+
       // Mark that we need to sync
       state.needsSync = true;
-      
+
       console.log("Cart after adding item:", state.cartItems);
     },
     removeFromCart: (state, action) => {
@@ -118,11 +118,10 @@ const cartSlice = createSlice({
         (item) => item._id !== action.payload._id
       );
       toast.error("Removed From Cart");
-      
+
       // Sync with backend after removal
       const token = localStorage.getItem("token");
       if (token) {
-        const updatedCartItems = state.cartItems;
         // We need to dispatch the syncCart action, but we can't do it directly in a reducer
         // Instead, we'll set a flag to indicate that sync is needed
         state.needsSync = true;
@@ -184,5 +183,12 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart, setCartItems, initializeCartFromBackend } = cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+  setCartItems,
+  initializeCartFromBackend,
+} = cartSlice.actions;
 export default cartSlice.reducer;

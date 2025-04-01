@@ -58,7 +58,7 @@ const AdminHome = () => {
           <div>
             <h3 className="text-gray-500 text-sm">Total Sales</h3>
             <p className="text-2xl font-bold">
-              ${stats.totalSales?.toFixed(2) || "0.00"}
+              Rs. {stats.totalSales?.toFixed(2) || "0.00"}
             </p>
           </div>
         </div>

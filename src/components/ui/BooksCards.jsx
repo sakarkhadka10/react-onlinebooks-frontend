@@ -81,7 +81,12 @@ const BooksCards = (book) => {
   const handleRemoveFromCart = () => {
     dispatch(removeFromCart(book));
     
-    // Remove the manual sync here - we'll use the effect above
+    // Sync with backend if logged in
+    if (isLoggedIn) {
+      // Calculate the updated cart items after removal
+      const updatedCartItems = cartItems.filter(item => item._id !== book._id);
+      dispatch(syncCart(updatedCartItems));
+    }
   };
 
   const renderStars = (rating) => {
@@ -94,8 +99,6 @@ const BooksCards = (book) => {
       />
     ));
   };
-
-  const titleSlug = createSlug(book?.title);
 
   return (
     <div className="flex-none w-[280px] bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-200">

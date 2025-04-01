@@ -148,7 +148,7 @@ const ManageBooks = () => {
                   </td>
                   <td className="py-4 px-6">{book.author}</td>
                   <td className="py-4 px-6">{book.category}</td>
-                  <td className="py-4 px-6">${book.price.toFixed(2)}</td>
+                  <td className="py-4 px-6">Rs. {book.price.toFixed(2)}</td>
                   <td className="py-4 px-6 flex space-x-2">
                     <Link
                       to={`/admin/edit-book/${book._id}`}

@@ -42,6 +42,7 @@ const ProductDetails = () => {
       const discount = book.discount || 0;
       const newPrice = price - (price * discount) / 100;
 
+      // Add to local cart state
       dispatch(
         addToCart({
           ...book,
@@ -49,6 +50,31 @@ const ProductDetails = () => {
           newPrice,
         })
       );
+      
+      // Sync with backend if logged in
+      if (isLoggedIn) {
+        // Calculate the updated cart items after addition
+        const existingItem = cartItems.find(item => item._id === book._id);
+        
+        let updatedCartItems;
+        if (existingItem) {
+          // If item already exists, update quantity
+          updatedCartItems = cartItems.map(item => 
+            item._id === book._id 
+              ? { ...item, quantity: item.quantity + 1 } 
+              : item
+          );
+        } else {
+          // If item doesn't exist, add it to cart
+          updatedCartItems = [
+            ...cartItems, 
+            { ...book, quantity: 1, newPrice }
+          ];
+        }
+        
+        // Dispatch syncCart with the updated cart items
+        dispatch(syncCart(updatedCartItems));
+      }
     }
   };
 
@@ -60,12 +86,13 @@ const ProductDetails = () => {
 
       // Force sync with backend if logged in
       if (isLoggedIn) {
-        setTimeout(() => {
-          const updatedCartItems = cartItems.filter(
-            (item) => item._id !== book._id
-          );
-          dispatch(syncCart(updatedCartItems));
-        }, 100);
+        // Calculate the updated cart items after removal
+        const updatedCartItems = cartItems.filter(
+          (item) => item._id !== book._id
+        );
+        
+        // Dispatch syncCart with the updated cart items
+        dispatch(syncCart(updatedCartItems));
       }
     }
   };

@@ -78,9 +78,8 @@ const NavBar = () => {
         {/* Overlays */}
         <div className="lg:hidden">
           <div
-            className={`fixed inset-0 z-50 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out ${
-              navOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
+            className={`fixed inset-0 z-50 bg-black bg-opacity-50 transition-opacity duration-300 ease-in-out ${navOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
           />
           <div
             className={`fixed top-0 left-0 h-full w-[280px] bg-[var(--color-dark)] text-[var(--color-light)] px-4 py-4 
@@ -92,7 +91,7 @@ const NavBar = () => {
                 <Link to="/">
                   <img src="/logo.png" alt="logo" />
                 </Link>
-              </div>
+              </div   >
               <div className="text-2xl">
                 <button onClick={() => setNavOpen(!navOpen)}>
                   <FaXmark />

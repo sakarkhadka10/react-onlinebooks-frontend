@@ -66,7 +66,13 @@ const CartPage = () => {
 
   const handleRemoveItem = (itemId) => {
     dispatch(removeFromCart({ _id: itemId }));
-    // Let the useEffect handle syncing
+    
+    // Sync with backend if logged in
+    if (isLoggedIn) {
+      // Calculate the updated cart items after removal
+      const updatedCartItems = cartItems.filter(item => item._id !== itemId);
+      dispatch(syncCart(updatedCartItems));
+    }
   };
 
   const handleClearCart = () => {
